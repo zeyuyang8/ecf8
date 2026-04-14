@@ -1,0 +1,3 @@
+repo_id,model_type,boolq,boolq_stderr
+Qwen/Qwen3-8B-FP8,compressed,0.82,0.03861229196653691
+Qwen/Qwen3-8B-FP8,original,0.82,0.03861229196653691

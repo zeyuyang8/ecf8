@@ -1,0 +1,47 @@
+# Mush have this line if you are not on a x86_64 machine
+# Need to specify the correct CUDA version
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+# Jupyter
+ipykernel
+ipywidgets
+wandb
+
+# PyTorch
+torch==2.7.1
+compressed-tensors
+torchaudio==2.7.1
+
+# Huggingface
+transformers==4.56.0
+accelerate
+diffusers==0.34.0
+kernels
+lm-eval
+gpustat
+
+# Third-party libraries
+git+https://github.com/modelscope/DiffSynth-Studio.git
+
+# CUDA
+cupy-cuda12x
+
+# General
+toml
+
+# Visualization
+matplotlib
+termcolor
+
+# Compression
+dahuffman
+
+# Hunyuan
+opencv-python
+einops
+tqdm
+loguru
+imageio
+imageio-ffmpeg
+safetensors
+gradio

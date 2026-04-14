@@ -1,0 +1,6 @@
+[flake8]
+max-line-length = 1500
+extend-ignore = E203
+per-file-ignores =
+    scripts/compress.py:E402
+    dfloat/run/run.py:F841
