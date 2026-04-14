@@ -1,5 +1,9 @@
 # ECF8
 
+[ICLR 2026] Official implementation of "To Compress or Not? Pushing the Frontier of Lossless GenAI Model Weights Compression with Exponent Concentration"
+
+[[OpenReview](https://openreview.net/forum?id=XI1CeufywD)] [[arXiv]](https://arxiv.org/abs/2510.02676)
+
 ## Install
 
 Install the dependencies.
@@ -35,7 +39,7 @@ To run more models, please refer to the `scripts/compress.sh`, `scripts/inferenc
 
 ## Results
 
-| repo_id | model_type | boolq | boolq_stderr |
+| repo_id | model_type | boolq_mean | boolq_stderr |
 |---------|------------|-------|--------------|
 | Qwen/Qwen3-8B-FP8 | compressed | 0.82 | 0.0386 |
 | Qwen/Qwen3-8B-FP8 | original | 0.82 | 0.0386 |
