@@ -88,7 +88,7 @@
                 <div class="tldr-box rounded mb-3">
                     <p class="tldr-headline mb-3">
                         GenAI model weights exhibit
-                        <span class="tldr-keyword" data-color="secondary">exponent concentration<span class="keyword-tooltip">Floating-point exponents in trained model weights cluster within a narrow range with only 2&ndash;3 bits, far below the 4&ndash;8 bits allocated by standard formats.</span></span>,
+                        <span class="tldr-keyword" data-color="secondary">exponent concentration<span class="keyword-tooltip">Floating-point exponents in trained model weights cluster within a narrow range with entropy around only 2&ndash;3 bits, far below the 4&ndash;8 bits allocated by standard formats.</span></span>,
                         enabling
                         <span class="tldr-keyword" data-color="primary">lossless FP8 compression<span class="keyword-tooltip">ECF8 applies Huffman coding to low-entropy exponents with GPU-optimized decoding, achieving bit-exact weight reconstruction with zero quality degradation.</span></span>
                         that delivers
@@ -188,7 +188,7 @@
 
                         <div class="callout callout--gold">
                             <p>
-                                <strong>Key Observation:</strong> Floating-point exponents in trained GenAI model weights do not spread uniformly; instead, they concentrate within a narrow range with only 2&ndash;3 bits, leaving significant headroom for lossless compression.
+                                <strong>Key Observation:</strong> Floating-point exponents in trained GenAI model weights do not spread uniformly; instead, they concentrate within a narrow range with entropy around only 2&ndash;3 bits, leaving significant headroom for lossless compression.
                             </p>
                         </div>
                     </div>
