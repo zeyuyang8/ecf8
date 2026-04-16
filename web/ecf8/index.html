@@ -53,7 +53,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-11 mx-auto text-center">
-                    <div class="venue-badge">ICLR 2026</div>
+                    <div class="venue-badge"><img src="assets/logos/iclr.png" alt="ICLR" class="venue-logo">ICLR 2026</div>
                     <h1 class="paper-title">ECF8</h1>
                     <p class="paper-subtitle">Lossless GenAI Model Weights Compression with Exponent Concentration</p>
                     <div class="author-line">
@@ -71,11 +71,11 @@
                             <sup>1</sup>
                         </div>
                         <div class="institution-logo-wrapper">
-                            <span class="institution-text">Lambda, Inc.</span>
+                            <img src="assets/logos/lambda.svg" alt="Lambda" class="institution-logo">
                             <sup>2</sup>
                         </div>
                         <div class="institution-logo-wrapper">
-                            <span class="institution-text">Stevens Institute of Technology</span>
+                            <img src="assets/logos/stevens.png" alt="Stevens Institute of Technology" class="institution-logo institution-logo--tall">
                             <sup>3</sup>
                         </div>
                     </div>
@@ -177,7 +177,7 @@
                             We empirically examine weights from GenAI models spanning LLMs, diffusion transformers, and mixture-of-experts architectures. Across all models, the exponents consistently cluster within a narrow range, with Shannon entropy of only 2&ndash;3 bits &mdash; far below the allocated bitwidth. This persistent low-entropy phenomenon strongly suggests an underlying distributional principle.
                         </p>
 
-                        <div class="section-figure-row section-figure--wide section-figure--framed">
+                        <div class="section-figure-row section-figure--wide section-figure--framed tight">
                             <div class="section-figure-col">
                                 <img src="assets/figures/entropy_dsr1.png" alt="Entropy analysis for DeepSeek-R1" loading="lazy">
                             </div>
@@ -188,11 +188,7 @@
                                 <img src="assets/figures/entropy_flux.png" alt="Entropy analysis for FLUX.1" loading="lazy">
                             </div>
                         </div>
-                        <p class="section-caption">
-                            <strong>Exponent entropy is consistently low across architectures.</strong> Layer-wise entropy for DeepSeek-R1 (671B), Llama 3.3 (70B), and FLUX.1 clusters around 2&ndash;3 bits, far below the allocated bitwidth.
-                        </p>
-
-                        <div class="section-figure-row section-figure--wide section-figure--framed">
+                        <div class="section-figure-row section-figure--wide section-figure--framed tight">
                             <div class="section-figure-col">
                                 <img src="assets/figures/entropy_qwen3-235b.png" alt="Entropy analysis for Qwen3-235B" loading="lazy">
                             </div>
@@ -204,7 +200,7 @@
                             </div>
                         </div>
                         <p class="section-caption">
-                            <strong>The phenomenon persists across modalities.</strong> MoE models (Qwen3-235B), video generation models (Wan2.1, Wan2.2), and multimodal models all exhibit the same exponent concentration pattern.
+                            <strong>Exponent entropy is consistently low across architectures and modalities.</strong> Layer-wise entropy for LLMs (DeepSeek-R1, Llama 3.3), MoE models (Qwen3-235B), diffusion transformers (FLUX.1), and video generation models (Wan2.1, Wan2.2) all cluster around 2&ndash;3 bits, far below the allocated bitwidth.
                         </p>
 
                         <div class="callout callout--gold">
@@ -392,6 +388,190 @@
                         </div>
                         <p class="section-caption">
                             <strong>ECF8 delivers consistent benefits across scales and modalities.</strong> Memory reductions enable deployment on lower-capacity hardware. Under fixed memory constraints, ECF8 supports larger batch sizes, translating into substantial throughput improvements.
+                        </p>
+
+                        <h3 class="subsection-title">Language Model Inference Acceleration</h3>
+
+                        <p class="body-text">
+                            Under fixed memory constraints, ECF8 enables consistently higher throughput across LLMs by supporting larger batch sizes. DeepSeek-R1-0528 shows the most dramatic improvement: 8&times; larger batch size (16 vs 2) within 640 GB, yielding 150.3% higher throughput and 60.1% lower per-request latency.
+                        </p>
+
+                        <div class="results-table-wrapper">
+                            <table class="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>Constraint</th>
+                                        <th colspan="2" style="text-align: center;">Max Batch Size</th>
+                                        <th colspan="3" style="text-align: center;">Per Request Latency (s)</th>
+                                        <th colspan="3" style="text-align: center;">Throughput (tokens/s)</th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>FP8</th>
+                                        <th>ECF8</th>
+                                        <th>FP8</th>
+                                        <th>ECF8</th>
+                                        <th>&darr; (%)</th>
+                                        <th>FP8</th>
+                                        <th>ECF8</th>
+                                        <th>&uarr; (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>DeepSeek-R1-0528</td>
+                                        <td>640 GB</td>
+                                        <td>2</td>
+                                        <td>16</td>
+                                        <td>660.65</td>
+                                        <td>263.95</td>
+                                        <td class="highlight-cell">60.1</td>
+                                        <td>1.55</td>
+                                        <td>3.88</td>
+                                        <td class="highlight-cell">150.3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qwen3-235B-A22B</td>
+                                        <td>240 GB</td>
+                                        <td>32</td>
+                                        <td>64</td>
+                                        <td>107.56</td>
+                                        <td>79.14</td>
+                                        <td class="highlight-cell">26.4</td>
+                                        <td>9.52</td>
+                                        <td>12.94</td>
+                                        <td class="highlight-cell">35.9</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Llama-3.3-70B</td>
+                                        <td>80 GB</td>
+                                        <td>32</td>
+                                        <td>48</td>
+                                        <td>24.80</td>
+                                        <td>22.28</td>
+                                        <td class="highlight-cell">10.2</td>
+                                        <td>41.28</td>
+                                        <td>45.96</td>
+                                        <td class="highlight-cell">11.3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qwen3-Coder-30B</td>
+                                        <td>32 GB</td>
+                                        <td>16</td>
+                                        <td>32</td>
+                                        <td>107.33</td>
+                                        <td>86.70</td>
+                                        <td class="highlight-cell">19.2</td>
+                                        <td>9.54</td>
+                                        <td>11.80</td>
+                                        <td class="highlight-cell">23.7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qwen3-8B</td>
+                                        <td>12 GB</td>
+                                        <td>16</td>
+                                        <td>24</td>
+                                        <td>4.90</td>
+                                        <td>4.35</td>
+                                        <td class="highlight-cell">11.2</td>
+                                        <td>208.80</td>
+                                        <td>235.22</td>
+                                        <td class="highlight-cell">12.6</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="section-caption">
+                            <strong>LLM inference under fixed memory constraints.</strong> ECF8 enables larger batch sizes within the same memory budget, yielding 11.3%&ndash;150.3% throughput improvements across models from 8B to 671B parameters. Each batch generates 1024 tokens.
+                        </p>
+
+                        <h3 class="subsection-title">Diffusion Model Inference Acceleration</h3>
+
+                        <p class="body-text">
+                            For diffusion models using VRAM management (dynamic GPU/CPU offloading), ECF8's compact weights reduce communication overhead during frequent weight loading, translating storage efficiency into latency gains. FLUX.1-dev achieves 45.9% end-to-end latency reduction, while Qwen-Image shows 55.9% step-latency improvement.
+                        </p>
+
+                        <div class="results-table-wrapper">
+                            <table class="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>DType</th>
+                                        <th>E2E Latency (s)</th>
+                                        <th>Step Latency (ms)</th>
+                                        <th>Memory (MB)</th>
+                                        <th>Memory &darr;</th>
+                                        <th>Latency &darr;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="2">FLUX.1-dev</td>
+                                        <td>ECF8</td>
+                                        <td>13.15</td>
+                                        <td>438.4</td>
+                                        <td>14274</td>
+                                        <td class="highlight-cell" rowspan="2">12.1%</td>
+                                        <td class="highlight-cell" rowspan="2">45.9%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FP8</td>
+                                        <td>24.29</td>
+                                        <td>809.5</td>
+                                        <td>16243</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">Wan2.1-T2V-14B</td>
+                                        <td>ECF8</td>
+                                        <td>460.67</td>
+                                        <td>9213.4</td>
+                                        <td>18036</td>
+                                        <td class="highlight-cell" rowspan="2">7.6%</td>
+                                        <td class="highlight-cell" rowspan="2">3.3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FP8</td>
+                                        <td>476.21</td>
+                                        <td>9524.3</td>
+                                        <td>19529</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">Wan2.2-T2V-A14B</td>
+                                        <td>ECF8</td>
+                                        <td>461.41</td>
+                                        <td>9228.2</td>
+                                        <td>27560</td>
+                                        <td class="highlight-cell" rowspan="2">17.8%</td>
+                                        <td class="highlight-cell" rowspan="2">4.0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FP8</td>
+                                        <td>480.45</td>
+                                        <td>9608.9</td>
+                                        <td>33517</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">Qwen-Image</td>
+                                        <td>ECF8</td>
+                                        <td>49.05</td>
+                                        <td>1226.3</td>
+                                        <td>25766</td>
+                                        <td class="highlight-cell" rowspan="2">7.9%</td>
+                                        <td class="highlight-cell" rowspan="2">55.9%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FP8</td>
+                                        <td>111.14</td>
+                                        <td>2778.4</td>
+                                        <td>27963</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="section-caption">
+                            <strong>DiT inference with VRAM management.</strong> ECF8 reduces end-to-end latency by 3.3%&ndash;45.9% and peak memory by 7.6%&ndash;17.8% across diffusion transformer architectures. All experiments use DiffSynth on a single GH200 GPU (96 GB).
                         </p>
 
                         <div class="callout callout--blue">
