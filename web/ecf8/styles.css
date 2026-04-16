@@ -154,7 +154,9 @@ a { color: var(--link-color); }
 }
 
 .venue-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     background: linear-gradient(135deg, var(--primary-color), #1D4ED8);
     color: #fff;
     font-size: 0.85rem;
@@ -163,6 +165,11 @@ a { color: var(--link-color); }
     border-radius: 20px;
     letter-spacing: 0.08em;
     margin-bottom: 24px;
+}
+
+.venue-logo {
+    height: 16px;
+    width: auto;
 }
 
 .author-line {
@@ -242,8 +249,8 @@ a { color: var(--link-color); }
 
 .institution-logo {
     height: auto;
-    width: 130px;
-    max-height: 38px;
+    width: 160px;
+    max-height: 48px;
     object-fit: contain;
     vertical-align: middle;
     transition: opacity 0.2s ease;
@@ -707,7 +714,7 @@ a { color: var(--link-color); }
 /* Math blocks */
 .math-block {
     max-width: 860px;
-    margin: -8px auto 24px auto;
+    margin: -16px auto 24px auto;
     padding: 20px 28px;
     background: rgba(0, 0, 0, 0.02);
     border: 1px solid rgba(0, 0, 0, 0.05);
