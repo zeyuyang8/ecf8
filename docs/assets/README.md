@@ -1,14 +1,14 @@
 # Asset Generation Notes
 
 This file documents how the binary assets under
-`web/ecf8/assets/figures/` were produced, so they can be regenerated
+`docs/assets/figures/` were produced, so they can be regenerated
 from raw outputs if needed.
 
 All commands assume:
 - macOS with Homebrew
 - `ffmpeg` installed (`brew install ffmpeg`)
 - `sips` (ships with macOS) for PNG resizing
-- Working directory: `web/ecf8/assets/figures/`
+- Working directory: `docs/assets/figures/`
 
 ---
 
@@ -34,7 +34,7 @@ commit `3ee62a5`) or regenerate from inference scripts.
 ### Commands
 
 ```bash
-cd web/ecf8/assets/figures/seed2025-original
+cd docs/assets/figures/seed2025-original
 
 for i in 0 1 2 3 4; do
   # VP9 / WebM — smaller where supported
@@ -84,7 +84,7 @@ look sharp in the lightbox without wasting bandwidth.
 ### Command
 
 ```bash
-cd web/ecf8/assets/figures
+cd docs/assets/figures
 
 for i in 0 1 2 3 4 5 6 7 8 9; do
   sips -Z 768 qwen_image_${i}.png --out qwen_image_${i}.png
@@ -101,7 +101,7 @@ aspect ratio. Inputs here are square so output is 768×768.
 
 ## 3. General conventions
 
-- All binary assets live under `web/ecf8/assets/figures/`.
+- All binary assets live under `docs/assets/figures/`.
 - PNGs for static figures (entropy plots, lookup table diagram) stay at
   their original resolutions since they contain fine detail.
 - Photographic / generative outputs should be downscaled to a

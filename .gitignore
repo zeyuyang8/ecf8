@@ -1,5 +1,5 @@
 web/beyond-llms.github.io-main/
-web/ecf8/assets/paper/
+docs/assets/paper/
 dfloat-models/
 private/
 wandb/
@@ -8,3 +8,4 @@ scripts/models
 scripts/results
 __pycache__/
 *.egg-info/
+.DS_Store
