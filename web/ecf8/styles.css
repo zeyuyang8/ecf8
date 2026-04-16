@@ -534,7 +534,7 @@ a { color: var(--link-color); }
 }
 
 .section-figure--wide img {
-    max-height: 50%;
+    max-height: 480px;
 }
 
 /* Side-by-side figures */
@@ -558,6 +558,21 @@ a { color: var(--link-color); }
     height: auto;
     border-radius: 6px;
     object-fit: contain;
+}
+
+.section-figure--framed .section-figure-col img {
+    background: #fff;
+    padding: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Institution text (non-logo) */
+.institution-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    opacity: 0.85;
+    margin: 0 8px;
 }
 
 @media (max-width: 576px) {
@@ -648,6 +663,10 @@ a { color: var(--link-color); }
     color: var(--accent-color);
 }
 
+.results-table tbody tr:nth-child(even) td {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
 /* Image grid for generated samples */
 .image-grid {
     display: grid;
@@ -663,6 +682,12 @@ a { color: var(--link-color); }
     object-fit: cover;
     border-radius: 6px;
     cursor: zoom-in;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.image-grid img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 576px) {
@@ -703,6 +728,12 @@ a { color: var(--link-color); }
     min-width: 160px;
     flex: 1;
     max-width: 220px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 .metric-value {
@@ -1044,6 +1075,10 @@ a { color: var(--link-color); }
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+[data-theme="dark"] .section-figure--framed .section-figure-col img {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
 [data-theme="dark"] .results-table th {
     border-bottom-color: rgba(255, 255, 255, 0.15);
 }
@@ -1054,6 +1089,10 @@ a { color: var(--link-color); }
 
 [data-theme="dark"] .results-table tr:hover td {
     background-color: rgba(59, 130, 246, 0.05);
+}
+
+[data-theme="dark"] .results-table tbody tr:nth-child(even) td {
+    background-color: rgba(255, 255, 255, 0.025);
 }
 
 [data-theme="dark"] .metric-card {

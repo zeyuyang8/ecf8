@@ -58,11 +58,11 @@
                     <p class="paper-subtitle">Lossless GenAI Model Weights Compression with Exponent Concentration</p>
                     <div class="author-line">
                         <span><a href="https://zeyuyang8.github.io/" class="author-link">Zeyu Yang<sup>1</sup></a></span>
-                        <span><a href="#" class="author-link">Tianyi Zhang<sup>1</sup></a></span>
-                        <span><a href="#" class="author-link">Jianwen Xie<sup>2</sup></a></span>
-                        <span><a href="#" class="author-link">Chuan Li<sup>2</sup></a></span>
-                        <span><a href="#" class="author-link">Zhaozhuo Xu<sup>3</sup></a></span>
-                        <span><a href="#" class="author-link">Anshumali Shrivastava<sup>1</sup></a></span>
+                        <span><span class="author-link">Tianyi Zhang<sup>1</sup></span></span>
+                        <span><span class="author-link">Jianwen Xie<sup>2</sup></span></span>
+                        <span><span class="author-link">Chuan Li<sup>2</sup></span></span>
+                        <span><span class="author-link">Zhaozhuo Xu<sup>3</sup></span></span>
+                        <span><span class="author-link">Anshumali Shrivastava<sup>1</sup></span></span>
                     </div>
 
                     <div class="institution-logos">
@@ -70,12 +70,12 @@
                             <img src="assets/logos/rice.svg" alt="Rice University" class="institution-logo">
                             <sup>1</sup>
                         </div>
-                        <div class="institution-logo-wrapper" style="margin-left: 20px;">
-                            <span style="font-size: 1.1rem; font-weight: 500; color: var(--text-color); opacity: 0.85;">Lambda, Inc.</span>
+                        <div class="institution-logo-wrapper">
+                            <span class="institution-text">Lambda, Inc.</span>
                             <sup>2</sup>
                         </div>
-                        <div class="institution-logo-wrapper" style="margin-left: 20px;">
-                            <span style="font-size: 1.1rem; font-weight: 500; color: var(--text-color); opacity: 0.85;">Stevens Institute of Technology</span>
+                        <div class="institution-logo-wrapper">
+                            <span class="institution-text">Stevens Institute of Technology</span>
                             <sup>3</sup>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                         <div class="col-lg-12">
                             <p class="tldr-headline mb-0">
                                 GenAI weights exhibit
-                                <span class="tldr-keyword" data-color="secondary">exponent concentration<span class="keyword-tooltip">Floating-point exponents in trained model weights cluster within a narrow range with only 2-3 bits of entropy, far below the 4-8 bits allocated in standard formats.</span></span>,
+                                <span class="tldr-keyword" data-color="secondary">exponent concentration<span class="keyword-tooltip">Floating-point exponents in trained model weights cluster within a narrow range with only 2&ndash;3 bits of entropy, far below the 4&ndash;8 bits allocated in standard formats.</span></span>,
                                 enabling
                                 <span class="tldr-keyword" data-color="primary">lossless FP8 compression<span class="keyword-tooltip">ECF8 uses Huffman coding on low-entropy exponents with GPU-optimized decoding, achieving bit-exact weight reconstruction with zero quality degradation.</span></span>
                                 that delivers
@@ -170,11 +170,11 @@
                         <h2 class="section-title">Exponent Concentration in GenAI Weights</h2>
 
                         <p class="body-text">
-                            In low-precision floating-point formats (BF16, FP8), each weight is encoded as $x = (-1)^s \cdot 2^E \cdot M$, where $s$ is the sign bit, $E$ is the exponent, and $M$ is the mantissa. Standard formats allocate 4-8 bits for exponents, assuming they spread across the full range. But do they?
+                            In low-precision floating-point formats (BF16, FP8), each weight is encoded as $x = (-1)^s \cdot 2^E \cdot M$, where $s$ is the sign bit, $E$ is the exponent, and $M$ is the mantissa. Standard formats allocate 4&ndash;8 bits for exponents, assuming they spread across the full range. But do they?
                         </p>
 
                         <p class="body-text">
-                            We empirically examine weights from GenAI models spanning LLMs, diffusion transformers, and mixture-of-experts architectures. Across all models, the exponents consistently cluster within a narrow range, with Shannon entropy of only 2-3 bits &mdash; far below the 4-8 bits allocated in standard formats. This persistent low-entropy phenomenon strongly suggests an underlying distributional principle.
+                            We empirically examine weights from GenAI models spanning LLMs, diffusion transformers, and mixture-of-experts architectures. Across all models, the exponents consistently cluster within a narrow range, with Shannon entropy of only 2&ndash;3 bits &mdash; far below the allocated bitwidth. This persistent low-entropy phenomenon strongly suggests an underlying distributional principle.
                         </p>
 
                         <div class="section-figure-row section-figure--wide section-figure--framed">
@@ -189,7 +189,7 @@
                             </div>
                         </div>
                         <p class="section-caption">
-                            <strong>Exponent entropy is consistently low across architectures.</strong> Layer-wise entropy analysis for DeepSeek-R1 (671B), Llama 3.3 (70B), and FLUX.1 shows exponent entropy clustering around 2-3 bits, far below the allocated bitwidth.
+                            <strong>Exponent entropy is consistently low across architectures.</strong> Layer-wise entropy for DeepSeek-R1 (671B), Llama 3.3 (70B), and FLUX.1 clusters around 2&ndash;3 bits, far below the allocated bitwidth.
                         </p>
 
                         <div class="section-figure-row section-figure--wide section-figure--framed">
@@ -209,7 +209,7 @@
 
                         <div class="callout callout--gold">
                             <p>
-                                <strong>Key Observation:</strong> Floating-point exponents in trained GenAI weights do not spread uniformly &mdash; they concentrate within a narrow range with only 2-3 bits of entropy. This creates significant headroom for lossless compression.
+                                <strong>Key Observation:</strong> Floating-point exponents in trained GenAI weights do not spread uniformly &mdash; they concentrate within a narrow range with only 2&ndash;3 bits of entropy, creating significant headroom for lossless compression.
                             </p>
                         </div>
                     </div>
@@ -225,7 +225,7 @@
                         <h2 class="section-title">Why Exponents Concentrate</h2>
 
                         <p class="body-text">
-                            The exponent concentration is not coincidental &mdash; it arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(|\Delta_t| > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing the theoretical foundation for exponent concentration.
+                            The exponent concentration is not coincidental &mdash; it arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(|\Delta_t| > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing a rigorous foundation for exponent concentration.
                         </p>
 
                         <div class="math-block">
@@ -234,7 +234,7 @@
                         </div>
 
                         <p class="body-text">
-                            This theorem shows that exponents decay geometrically from zero with rate $2^{-\alpha}$, guaranteeing finite entropy regardless of $\alpha$. For the Gaussian-like case ($\alpha=2$), the entropy bound gives $1.6 \leq H(E) \leq 2.67$ bits. Including the sign bit and minimal mantissa, the absolute compression floor is approximately:
+                            Exponents decay geometrically from zero with rate $2^{-\alpha}$, guaranteeing finite entropy regardless of $\alpha$. For the Gaussian-like case ($\alpha=2$), the entropy bound gives $1.6 \leq H(E) \leq 2.67$ bits. Including the sign bit and minimal mantissa, the absolute compression floor is approximately:
                         </p>
 
                         <div class="math-block">
@@ -282,18 +282,18 @@
                         <h3 class="subsection-title">Decoding: GPU-Optimized Parallel Decompression</h3>
 
                         <p class="body-text">
-                            The decoding kernel reconstructs exponents from the Huffman-encoded bitstream using five phases: memory initialization, data loading, parallel counting (computing symbol counts via parallel reduction), coordinated decoding, and coalesced global memory write-back. This design maximizes GPU parallelism through careful thread-local computation and block-level synchronization.
+                            The decoding kernel reconstructs exponents from the Huffman-encoded bitstream using five phases: memory initialization, data loading, parallel counting via parallel reduction, coordinated decoding, and coalesced global memory write-back. This design maximizes GPU parallelism through careful thread-local computation and block-level synchronization.
                         </p>
 
                         <h3 class="subsection-title">Tensor Management: Just-in-Time Decompression</h3>
 
                         <p class="body-text">
-                            ECF8 implements just-in-time decompression using PyTorch forward hooks. A single pre-allocated GPU buffer (sized to the largest layer) is reused across layers, enabling memory-efficient inference with constant overhead regardless of model depth. This transforms memory compression into real inference acceleration.
+                            ECF8 implements just-in-time decompression using PyTorch forward hooks. A single pre-allocated GPU buffer (sized to the largest layer) is reused across layers, enabling memory-efficient inference with constant overhead regardless of model depth. This is the key mechanism that transforms memory compression into real inference acceleration.
                         </p>
 
                         <div class="callout callout--teal">
                             <p>
-                                <strong>Design Principle:</strong> ECF8 transforms memory savings into inference speedup &mdash; smaller footprint allows larger batch sizes, which enables higher throughput and lower per-request latency.
+                                <strong>Design Principle:</strong> ECF8 transforms memory savings into inference speedup &mdash; a smaller footprint allows larger batch sizes, which enables higher throughput and lower per-request latency.
                             </p>
                         </div>
                     </div>
@@ -309,10 +309,8 @@
                         <h2 class="section-title">Results</h2>
 
                         <p class="body-text">
-                            We evaluate ECF8 across nine models spanning LLMs, DiTs, and MoE architectures from 8B to 671B parameters. ECF8 achieves 9.8%-26.9% memory savings and 11.3%-177.1% throughput acceleration, all while maintaining bit-exact weight reconstruction.
+                            We evaluate ECF8 across nine models spanning LLMs, DiTs, and MoE architectures from 8B to 671B parameters. ECF8 achieves 9.8%&ndash;26.9% memory savings and 11.3%&ndash;177.1% throughput acceleration, all while maintaining bit-exact weight reconstruction. Under fixed memory constraints, the freed memory allows larger batch sizes &mdash; for DeepSeek-R1-0528 at 640 GB, ECF8 supports batch size 16 vs. FP8's batch size 2, delivering 150.3% higher throughput and 60.1% lower per-request latency.
                         </p>
-
-                        <h3 class="subsection-title">Memory Savings &amp; Throughput Improvements</h3>
 
                         <div class="results-table-wrapper">
                             <table class="results-table">
@@ -393,19 +391,12 @@
                             </table>
                         </div>
                         <p class="section-caption">
-                            <strong>ECF8 delivers consistent benefits across scales and modalities.</strong> Memory reductions enable deployment on lower-capacity hardware. Under fixed memory constraints, ECF8 supports larger batch sizes, translating into throughput improvements.
+                            <strong>ECF8 delivers consistent benefits across scales and modalities.</strong> Memory reductions enable deployment on lower-capacity hardware. Under fixed memory constraints, ECF8 supports larger batch sizes, translating into substantial throughput improvements.
                         </p>
-
-                        <h3 class="subsection-title">Inference Acceleration Under Fixed Memory</h3>
-
-                        <p class="body-text">
-                            Under fixed memory constraints, ECF8 enables significantly larger batch sizes. For DeepSeek-R1-0528 at 640 GB, ECF8 supports batch size 16 vs. FP8's batch size 2, delivering 150.3% higher throughput and 60.1% lower per-request latency. For diffusion models, FLUX.1-dev achieves 45.9% latency reduction, and Qwen-Image achieves 55.9% step-latency improvement.
-                        </p>
-
 
                         <div class="callout callout--blue">
                             <p>
-                                <strong>Practical Impact:</strong> ECF8 enables deploying DeepSeek-R1 (671B) on 8&times;H100 instead of 8&times;H200, and Wan2.1-T2V-14B fits on a single RTX4080 where uncompressed FP8 exceeds memory limits.
+                                <strong>Practical Impact:</strong> ECF8 enables deploying DeepSeek-R1 (671B) on 8&times;H100 instead of 8&times;H200, and Wan2.1-T2V-14B fits on a single RTX4080 where uncompressed FP8 exceeds memory limits. For diffusion models, FLUX.1-dev achieves 45.9% end-to-end latency reduction and Qwen-Image achieves 55.9% step-latency improvement.
                             </p>
                         </div>
                     </div>
