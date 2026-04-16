@@ -271,6 +271,7 @@ a { color: var(--link-color); }
     max-width: 860px;
     margin-left: auto;
     margin-right: auto;
+    padding: 22px 36px 24px 36px;
 }
 
 .tldr-headline {
@@ -381,6 +382,10 @@ a { color: var(--link-color); }
     text-align: center;
     position: relative;
     letter-spacing: -0.2px;
+}
+
+.section-title--flush {
+    margin-top: 12px;
 }
 
 .section-title::after {
@@ -811,6 +816,8 @@ section[id], header[id] {
 .nav-top-link::after { display: none; }
 .nav-top-link.active { font-weight: 400; }
 
+.nav-top-icon { font-size: 0.7em; }
+
 .section-nav-sep {
     color: rgba(0, 0, 0, 0.15);
     font-size: 0.7rem;
@@ -1195,7 +1202,7 @@ section[id], header[id] {
 }
 
 /* =============================================
-   11. RESPONSIVE -- TABLET (<=1200px)
+   12. RESPONSIVE -- TABLET (<=1200px)
    ============================================= */
 @media (max-width: 1200px) {
     .section-nav-link { font-size: 0.8rem; }
@@ -1260,7 +1267,7 @@ section[id], header[id] {
 }
 
 /* =============================================
-   13. RESPONSIVE -- SMALL MOBILE (<=576px)
+   14. RESPONSIVE -- SMALL MOBILE (<=576px)
    ============================================= */
 @media (max-width: 576px) {
     body { font-size: 0.9rem; }
@@ -1284,7 +1291,7 @@ section[id], header[id] {
 }
 
 /* =============================================
-   14. TOUCH DEVICE OPTIMIZATIONS
+   15. TOUCH DEVICE OPTIMIZATIONS
    ============================================= */
 @media (hover: none) {
     .author-link:hover,
