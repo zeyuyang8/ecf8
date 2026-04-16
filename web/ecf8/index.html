@@ -15,8 +15,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- KaTeX for math rendering -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false}
+            ],
+            throwOnError: false,
+            strict: false,
+            trust: true
+        });
+    });
+    </script>
     <!-- Consolidated CSS -->
     <link href="styles.css" rel="stylesheet">
 </head>
@@ -168,7 +183,7 @@
                             </div>
                         </div>
                         <p class="section-caption">
-                            <strong>Exponent entropy is consistently low across architectures and modalities.</strong> Layer-wise entropy for LLMs (DeepSeek-R1, Llama 3.3), MoE models (Qwen3-235B), diffusion transformers (FLUX.1), and video generation models (Wan2.1, Wan2.2) all cluster around 2&ndash;3 bits, far below the allocated bitwidth.
+                            <strong>Exponent entropy is consistently low across architectures and modalities.</strong> Layer-wise entropy is consistently around 2&ndash;3 bits.
                         </p>
 
                         <div class="callout callout--gold">
@@ -189,10 +204,10 @@
                         <h2 class="section-title">Why Exponents Concentrate</h2>
 
                         <p class="body-text">
-                            Exponent concentration is not coincidental, but rather arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(|\Delta_t| > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing a rigorous foundation for exponent concentration.
+                            Exponent concentration is not coincidental, but rather arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(\lvert\Delta_t\rvert > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing a rigorous foundation for exponent concentration.
                         </p>
 
-                        <div class="math-block"><strong>Theorem (Exponent Entropy Concentration).</strong> Let $E = \lfloor \log_2 |X| \rfloor$ where $X \sim S_\alpha$. Then $E$ follows a two-sided geometric distribution with parameter $q = 2^{-\alpha}$, and the Shannon entropy is bounded by:
+                        <div class="math-block"><strong>Theorem (Exponent Entropy Concentration).</strong> Let $E = \lfloor \log_2 \lvert X \rvert \rfloor$ where $X \sim S_\alpha$. Then $E$ follows a two-sided geometric distribution with parameter $q = 2^{-\alpha}$, and the Shannon entropy is bounded by:
                             $$\frac{\alpha}{1 + 2^{-\alpha}} \;\leq\; H(E) \;\leq\; \frac{\alpha}{1 - 2^{-\alpha}}$$
                         </div>
 
@@ -543,7 +558,7 @@
 
                         <div class="callout callout--blue">
                             <p>
-                                <strong>Practical Impact:</strong> ECF8 enables deploying DeepSeek-R1 (671B) on 8&times;H100 instead of 8&times;H200, and allows Wan2.1-T2V-14B to fit on a single RTX 4080 where uncompressed FP8 exceeds memory limits. For diffusion models, FLUX.1-dev achieves a 45.9% end-to-end latency reduction and Qwen-Image achieves a 55.9% step-latency improvement.
+                                <strong>Practical Impact:</strong> ECF8 enables deploying DeepSeek-R1-0528 (671B) on 8&times;H100 instead of 8&times;H200, and allows Wan2.1-T2V-14B to fit on a single RTX 4080 where uncompressed FP8 exceeds memory limits. For diffusion models, FLUX.1-dev achieves a 45.9% end-to-end latency reduction and Qwen-Image achieves a 55.9% step-latency improvement.
                             </p>
                         </div>
                     </div>

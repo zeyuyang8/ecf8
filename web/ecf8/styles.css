@@ -177,8 +177,8 @@ a { color: var(--link-color); }
 
 .institution-logo-wrapper sup {
     position: absolute;
-    top: 0px;
-    left: -12px;
+    top: 4px;
+    left: -8px;
     font-size: 0.9rem;
     color: var(--text-color);
 }
