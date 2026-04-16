@@ -567,49 +567,47 @@
                         <h2 class="section-title">Interactive Demo</h2>
                         <div class="ecf8-demo-wrapper">
                             <div class="ecf8-demo-header">
-                                <p class="ecf8-demo-subtitle">FLUX.1-dev on single GH200 GPU (96 GB) &middot; DiffSynth &middot; Playback at 4&times; speed</p>
+                                <p class="ecf8-demo-subtitle">FLUX.1-dev on single GH200 GPU (96 GB) &middot; DiffSynth &middot; ECF8 generates pixel-identical outputs 45.9% faster</p>
                                 <div class="ecf8-thumb-row">
-                                    <img class="ecf8-thumb active" src="assets/figures/flux_sample_1.png" data-idx="0" alt="Sample 1">
-                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_2.png" data-idx="1" alt="Sample 2">
-                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_3.png" data-idx="2" alt="Sample 3">
-                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_4.png" data-idx="3" alt="Sample 4">
-                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_5.png" data-idx="4" alt="Sample 5">
-                                </div>
-                                <button class="ecf8-demo-btn" id="ecf8GenBtn">Generate Image</button>
-                            </div>
-                            <div class="ecf8-panels">
-                                <div class="ecf8-panel" id="ecf8-panel-ecf8">
-                                    <div class="ecf8-panel-header">
-                                        <span class="ecf8-panel-label ecf8">ECF8 (Ours)</span>
-                                        <span class="ecf8-badge ecf8" id="ecf8-badge-ecf8">13s</span>
-                                    </div>
-                                    <div class="ecf8-image-box">
-                                        <img class="preview" id="ecf8-preview-ecf8" src="assets/figures/flux_sample_1.png" alt="">
-                                        <div class="ecf8-spinner-wrap" id="ecf8-spinner-ecf8"><div class="ecf8-spinner ecf8"></div><span class="ecf8-spinner-text">Generating...</span></div>
-                                        <img class="result" id="ecf8-img-ecf8" src="assets/figures/flux_sample_1.png" alt="ECF8 generated">
-                                    </div>
-                                    <div class="ecf8-progress-wrap">
-                                        <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar ecf8" id="ecf8-bar-ecf8"></div></div>
-                                        <div class="ecf8-progress-info"><span id="ecf8-time-ecf8">0.0s / 13s</span><span id="ecf8-pct-ecf8">0%</span></div>
-                                    </div>
-                                </div>
-                                <div class="ecf8-panel" id="ecf8-panel-fp8">
-                                    <div class="ecf8-panel-header">
-                                        <span class="ecf8-panel-label fp8">FP8 Baseline</span>
-                                        <span class="ecf8-badge fp8" id="ecf8-badge-fp8">24s</span>
-                                    </div>
-                                    <div class="ecf8-image-box">
-                                        <img class="preview" id="ecf8-preview-fp8" src="assets/figures/flux_sample_1.png" alt="">
-                                        <div class="ecf8-spinner-wrap" id="ecf8-spinner-fp8"><div class="ecf8-spinner fp8"></div><span class="ecf8-spinner-text">Generating...</span></div>
-                                        <img class="result" id="ecf8-img-fp8" src="assets/figures/flux_sample_1.png" alt="FP8 generated">
-                                    </div>
-                                    <div class="ecf8-progress-wrap">
-                                        <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar fp8" id="ecf8-bar-fp8"></div></div>
-                                        <div class="ecf8-progress-info"><span id="ecf8-time-fp8">0.0s / 24s</span><span id="ecf8-pct-fp8">0%</span></div>
-                                    </div>
+                                    <img class="ecf8-thumb active" src="assets/figures/seed2025-original/0.png" data-idx="0" alt="Sample 1">
+                                    <img class="ecf8-thumb" src="assets/figures/seed2025-original/1.png" data-idx="1" alt="Sample 2">
+                                    <img class="ecf8-thumb" src="assets/figures/seed2025-original/2.png" data-idx="2" alt="Sample 3">
+                                    <img class="ecf8-thumb" src="assets/figures/seed2025-original/3.png" data-idx="3" alt="Sample 4">
+                                    <img class="ecf8-thumb" src="assets/figures/seed2025-original/4.png" data-idx="4" alt="Sample 5">
                                 </div>
                             </div>
-                            <div class="ecf8-result-banner" id="ecf8-result"><strong>Pixel-identical outputs.</strong> ECF8 finished in 13s, <strong>45.9% faster</strong> than FP8 (24s) &mdash; with bit-for-bit identical results.</div>
+
+                            <!-- Prompt display -->
+                            <div class="ecf8-prompt-display">
+                                <span class="ecf8-prompt-label">Prompt</span>
+                                <p class="ecf8-prompt-text" id="ecf8-prompt-text">Bitcoin is the king</p>
+                            </div>
+
+                            <!-- Denoising trajectory -->
+                            <div class="ecf8-denoise-section">
+                                <div class="ecf8-denoise-header">
+                                    <span class="ecf8-denoise-label">Denoising Trajectory</span>
+                                    <span class="ecf8-denoise-step" id="ecf8-step-label">Step 0 / 29</span>
+                                </div>
+                                <div class="ecf8-denoise-viewer">
+                                    <img id="ecf8-denoise-img" src="assets/figures/seed2025-original/intermediates_0/prompt0_000.png" alt="Denoising step">
+                                </div>
+                                <div class="ecf8-denoise-controls">
+                                    <button class="ecf8-ctrl-btn" id="ecf8-play-btn" title="Play"><i class="fas fa-play"></i></button>
+                                    <input type="range" class="ecf8-scrubber" id="ecf8-scrubber" min="0" max="29" value="0">
+                                </div>
+                            </div>
+
+                            <!-- Final result -->
+                            <div class="ecf8-final-section">
+                                <div class="ecf8-final-header">
+                                    <span class="ecf8-denoise-label">Final Output</span>
+                                    <span class="ecf8-lossless-tag"><i class="fas fa-check-circle"></i> Lossless &mdash; pixel-identical to FP8</span>
+                                </div>
+                                <div class="ecf8-final-image">
+                                    <img id="ecf8-final-img" src="assets/figures/seed2025-original/0.png" alt="Final generated image">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -818,96 +816,94 @@ url={https://openreview.net/forum?id=XI1CeufywD}
         }
     })();
 
-    // ECF8 Demo
+    // ECF8 Demo — prompt, denoising trajectory, final output
     (function() {
-        var T1 = 13, T2 = 24, SPD = 4;
-        var raf = null, st = 0, d1 = false, d2 = false;
-        var btn = document.getElementById('ecf8GenBtn');
-        var samples = [
-            'assets/figures/flux_sample_1.png',
-            'assets/figures/flux_sample_2.png',
-            'assets/figures/flux_sample_3.png',
-            'assets/figures/flux_sample_4.png',
-            'assets/figures/flux_sample_5.png'
+        var STEPS = 30; // 0..29
+        var INTERVAL = 150; // ms per step during playback
+        var prompts = [
+            'Bitcoin is the king',
+            'majestic lion roaring, neon, bioluminescent, extremely detailed, hyper resolution, dramatic lighting, unreal engine, photorealistic',
+            'Film still, a medium shot of John Carradine as Obi Wan Kenobi, star wars episode IV if it was made in the 1940s, facing Darth Vader in the Death Star, analog film, old hollywood, black and white, award winning cinematography, ultrarealism, analog film, 35mm',
+            'a kribbler sport, 500cc horsepower, super vehicle, supersonic',
+            'Active Volcano in the middle of London'
         ];
-        var thumbs = document.querySelectorAll('.ecf8-thumb');
         var selectedIdx = 0;
+        var playing = false;
+        var playTimer = null;
 
-        function $(id) { return document.getElementById('ecf8-' + id); }
+        var thumbs = document.querySelectorAll('.ecf8-thumb');
+        var promptText = document.getElementById('ecf8-prompt-text');
+        var denoiseImg = document.getElementById('ecf8-denoise-img');
+        var finalImg = document.getElementById('ecf8-final-img');
+        var scrubber = document.getElementById('ecf8-scrubber');
+        var stepLabel = document.getElementById('ecf8-step-label');
+        var playBtn = document.getElementById('ecf8-play-btn');
 
-        thumbs.forEach(function(thumb) {
-            thumb.addEventListener('click', function() {
-                thumbs.forEach(function(t) { t.classList.remove('active'); });
-                this.classList.add('active');
-                selectedIdx = parseInt(this.getAttribute('data-idx'));
-                // Update preview images
-                ['ecf8', 'fp8'].forEach(function(k) {
-                    $('preview-' + k).src = samples[selectedIdx];
-                    $('img-' + k).src = samples[selectedIdx];
-                });
-            });
+        function pad(n) { return n < 10 ? '00' + n : '0' + n; }
+
+        function intermediatePath(sampleIdx, step) {
+            return 'assets/figures/seed2025-original/intermediates_' + sampleIdx + '/prompt' + sampleIdx + '_' + pad(step) + '.png';
+        }
+
+        function finalPath(sampleIdx) {
+            return 'assets/figures/seed2025-original/' + sampleIdx + '.png';
+        }
+
+        function updateStep(step) {
+            scrubber.value = step;
+            stepLabel.textContent = 'Step ' + step + ' / ' + (STEPS - 1);
+            denoiseImg.src = intermediatePath(selectedIdx, step);
+        }
+
+        function selectSample(idx) {
+            stopPlayback();
+            selectedIdx = idx;
+            thumbs.forEach(function(t) { t.classList.remove('active'); });
+            thumbs[idx].classList.add('active');
+            promptText.textContent = prompts[idx];
+            finalImg.src = finalPath(idx);
+            updateStep(0);
+        }
+
+        function stopPlayback() {
+            if (playTimer) clearInterval(playTimer);
+            playing = false;
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+
+        function startPlayback() {
+            var step = parseInt(scrubber.value);
+            if (step >= STEPS - 1) step = 0;
+            playing = true;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            updateStep(step);
+            playTimer = setInterval(function() {
+                step++;
+                if (step >= STEPS) {
+                    stopPlayback();
+                    updateStep(STEPS - 1);
+                    return;
+                }
+                updateStep(step);
+            }, INTERVAL);
+        }
+
+        thumbs.forEach(function(thumb, i) {
+            thumb.addEventListener('click', function() { selectSample(i); });
         });
 
-        function reset() {
-            ['ecf8', 'fp8'].forEach(function(k) {
-                var tt = k === 'ecf8' ? T1 : T2;
-                $('panel-' + k).classList.remove('done-ecf8', 'done-fp8');
-                $('badge-' + k).classList.remove('show');
-                $('img-' + k).classList.remove('show');
-                $('spinner-' + k).classList.remove('show');
-                $('preview-' + k).classList.remove('hide');
-                $('bar-' + k).style.width = '0%';
-                $('time-' + k).textContent = '0.0s / ' + tt + 's';
-                $('pct-' + k).textContent = '0%';
-            });
-            $('result').classList.remove('show');
-            d1 = false; d2 = false;
-        }
-
-        function upd(id, tt, el) {
-            var e = Math.min(el, tt);
-            var p = Math.min(el / tt * 100, 100);
-            $('bar-' + id).style.width = p + '%';
-            $('time-' + id).textContent = e.toFixed(1) + 's / ' + tt + 's';
-            $('pct-' + id).textContent = Math.round(p) + '%';
-            if (p >= 100) {
-                $('spinner-' + id).classList.remove('show');
-                $('img-' + id).classList.add('show');
-                $('badge-' + id).classList.add('show');
-                $('panel-' + id).classList.add('done-' + id);
-                return true;
-            }
-            return false;
-        }
-
-        function tick() {
-            var el = (Date.now() - st) / 1000 * SPD;
-            if (!d1) d1 = upd('ecf8', T1, el);
-            if (!d2) d2 = upd('fp8', T2, el);
-            if (d1 && d2) {
-                $('result').classList.add('show');
-                btn.disabled = false;
-                btn.textContent = 'Regenerate';
-                return;
-            }
-            raf = requestAnimationFrame(tick);
-        }
-
-        btn.addEventListener('click', function() {
-            if (raf) cancelAnimationFrame(raf);
-            reset();
-            var img = samples[selectedIdx];
-            ['ecf8', 'fp8'].forEach(function(k) {
-                $('preview-' + k).src = img;
-                $('img-' + k).src = img;
-                $('preview-' + k).classList.add('hide');
-                $('spinner-' + k).classList.add('show');
-            });
-            btn.disabled = true;
-            btn.textContent = 'Generating...';
-            st = Date.now();
-            raf = requestAnimationFrame(tick);
+        playBtn.addEventListener('click', function() {
+            if (playing) stopPlayback();
+            else startPlayback();
         });
+
+        scrubber.addEventListener('input', function() {
+            stopPlayback();
+            updateStep(parseInt(this.value));
+        });
+
+        // Preload first sample intermediates
+        for (var i = 0; i < STEPS; i++) { new Image().src = intermediatePath(0, i); }
     })();
 
     // Lightbox for figures
