@@ -600,7 +600,7 @@
                                     </div>
                                     <div class="ecf8-progress-wrap">
                                         <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar ecf8" id="ecf8-bar-ecf8"></div></div>
-                                        <div class="ecf8-progress-info"><span id="ecf8-time-ecf8">0.0s / 13s</span><span id="ecf8-step-ecf8">Step 0/29</span></div>
+                                        <div class="ecf8-progress-info"><span id="ecf8-time-ecf8">0.0s / 13s</span><span id="ecf8-step-ecf8">Step 1/30</span></div>
                                     </div>
                                 </div>
                                 <div class="ecf8-panel" id="ecf8-panel-fp8">
@@ -613,7 +613,7 @@
                                     </div>
                                     <div class="ecf8-progress-wrap">
                                         <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar fp8" id="ecf8-bar-fp8"></div></div>
-                                        <div class="ecf8-progress-info"><span id="ecf8-time-fp8">0.0s / 24s</span><span id="ecf8-step-fp8">Step 0/29</span></div>
+                                        <div class="ecf8-progress-info"><span id="ecf8-time-fp8">0.0s / 24s</span><span id="ecf8-step-fp8">Step 1/30</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -868,7 +868,7 @@ url={https://openreview.net/forum?id=XI1CeufywD}
                 $('badge-' + k).classList.remove('show');
                 $('bar-' + k).style.width = '0%';
                 $('time-' + k).textContent = '0.0s / ' + tt + 's';
-                $('step-' + k).textContent = 'Step 0/' + (STEPS - 1);
+                $('step-' + k).textContent = 'Step 1/' + STEPS;
                 $('frame-' + k).src = initFrame;
             });
             $('result').classList.remove('show');
@@ -894,7 +894,7 @@ url={https://openreview.net/forum?id=XI1CeufywD}
 
             $('bar-' + id).style.width = (pct * 100) + '%';
             $('time-' + id).textContent = t.toFixed(1) + 's / ' + totalTime + 's';
-            $('step-' + id).textContent = 'Step ' + step + '/' + (STEPS - 1);
+            $('step-' + id).textContent = 'Step ' + (step + 1) + '/' + STEPS;
             $('frame-' + id).src = intermediatePath(selectedIdx, step);
 
             if (pct >= 1) {
