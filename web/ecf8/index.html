@@ -603,7 +603,11 @@
                                         <span class="ecf8-badge ecf8" id="ecf8-badge-ecf8">13s</span>
                                     </div>
                                     <div class="ecf8-image-box">
-                                        <img class="ecf8-denoise-frame" id="ecf8-frame-ecf8" src="assets/figures/seed2025-original/intermediates_0/prompt0_000.png" alt="ECF8 denoising">
+                                        <video class="ecf8-denoise-frame" id="ecf8-frame-ecf8"
+                                               muted playsinline preload="auto" aria-label="ECF8 denoising">
+                                            <source src="assets/figures/seed2025-original/sample_0.mp4" type="video/mp4">
+                                            <source src="assets/figures/seed2025-original/sample_0.webm" type="video/webm">
+                                        </video>
                                     </div>
                                     <div class="ecf8-progress-wrap">
                                         <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar ecf8" id="ecf8-bar-ecf8"></div></div>
@@ -616,7 +620,11 @@
                                         <span class="ecf8-badge fp8" id="ecf8-badge-fp8">24s</span>
                                     </div>
                                     <div class="ecf8-image-box">
-                                        <img class="ecf8-denoise-frame" id="ecf8-frame-fp8" src="assets/figures/seed2025-original/intermediates_0/prompt0_000.png" alt="FP8 denoising">
+                                        <video class="ecf8-denoise-frame" id="ecf8-frame-fp8"
+                                               muted playsinline preload="auto" aria-label="FP8 denoising">
+                                            <source src="assets/figures/seed2025-original/sample_0.mp4" type="video/mp4">
+                                            <source src="assets/figures/seed2025-original/sample_0.webm" type="video/webm">
+                                        </video>
                                     </div>
                                     <div class="ecf8-progress-wrap">
                                         <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar fp8" id="ecf8-bar-fp8"></div></div>
@@ -834,12 +842,13 @@ url={https://openreview.net/forum?id=XI1CeufywD}
         }
     })();
 
-    // ECF8 Demo — side-by-side denoising race with real intermediate frames
+    // ECF8 Demo — side-by-side denoising race via HTML5 video with playbackRate
     (function() {
-        var STEPS = 30;        // steps 0..29
-        var T_ECF8 = 13;       // ECF8 total time (seconds)
-        var T_FP8 = 24;        // FP8 total time (seconds)
-        var SPD = 4;           // playback speed multiplier
+        var STEPS = 30;        // 30 denoising steps
+        var T_ECF8 = 13;       // ECF8 total simulated time (seconds)
+        var T_FP8 = 24;        // FP8 total simulated time (seconds)
+        var SPD = 4;           // wall-clock speedup factor
+        var VIDEO_DUR = 1.0;   // each sample video is 1s long (30 frames @ 30fps)
         var prompts = [
             'Bitcoin is the king',
             'majestic lion roaring, neon, bioluminescent, extremely detailed, hyper resolution, dramatic lighting, unreal engine, photorealistic',
@@ -857,27 +866,41 @@ url={https://openreview.net/forum?id=XI1CeufywD}
 
         function $(id) { return document.getElementById('ecf8-' + id); }
 
-        function pad(n) { return n < 10 ? '00' + n : '0' + n; }
-
-        function intermediatePath(sampleIdx, step) {
-            return 'assets/figures/seed2025-original/intermediates_' + sampleIdx + '/prompt' + sampleIdx + '_' + pad(step) + '.png';
+        function videoPath(sampleIdx, ext) {
+            return 'assets/figures/seed2025-original/sample_' + sampleIdx + '.' + ext;
         }
 
         function finalPath(sampleIdx) {
             return 'assets/figures/seed2025-original/' + sampleIdx + '.png';
         }
 
+        // Wall-clock playback duration per panel (accounting for SPD)
+        function wallDuration(totalTime) { return totalTime / SPD; }
+        // playbackRate so video finishes exactly when panel finishes
+        function rateFor(totalTime) { return VIDEO_DUR / wallDuration(totalTime); }
+
+        function setVideoSources(vid, idx) {
+            var sources = vid.querySelectorAll('source');
+            sources[0].src = videoPath(idx, 'mp4');
+            if (sources[1]) sources[1].src = videoPath(idx, 'webm');
+            vid.load();
+        }
+
+        function resetPanel(id) {
+            var tt = id === 'ecf8' ? T_ECF8 : T_FP8;
+            var vid = $('frame-' + id);
+            try { vid.pause(); } catch (e) {}
+            try { vid.currentTime = 0; } catch (e) {}
+            $('panel-' + id).classList.remove('done-ecf8', 'done-fp8');
+            $('badge-' + id).classList.remove('show');
+            $('bar-' + id).style.width = '0%';
+            $('time-' + id).textContent = '0.0s / ' + tt + 's';
+            $('step-' + id).textContent = 'Step 1/' + STEPS;
+        }
+
         function reset() {
-            var initFrame = intermediatePath(selectedIdx, 0);
-            ['ecf8', 'fp8'].forEach(function(k) {
-                var tt = k === 'ecf8' ? T_ECF8 : T_FP8;
-                $('panel-' + k).classList.remove('done-ecf8', 'done-fp8');
-                $('badge-' + k).classList.remove('show');
-                $('bar-' + k).style.width = '0%';
-                $('time-' + k).textContent = '0.0s / ' + tt + 's';
-                $('step-' + k).textContent = 'Step 1/' + STEPS;
-                $('frame-' + k).src = initFrame;
-            });
+            resetPanel('ecf8');
+            resetPanel('fp8');
             $('result').classList.remove('show');
         }
 
@@ -889,9 +912,9 @@ url={https://openreview.net/forum?id=XI1CeufywD}
             promptText.textContent = prompts[idx];
             btn.disabled = false;
             btn.textContent = 'Generate Image';
+            setVideoSources($('frame-ecf8'), idx);
+            setVideoSources($('frame-fp8'), idx);
             reset();
-            // Preload intermediates
-            for (var i = 0; i < STEPS; i++) { new Image().src = intermediatePath(idx, i); }
         }
 
         function updatePanel(id, totalTime, elapsed) {
@@ -902,10 +925,12 @@ url={https://openreview.net/forum?id=XI1CeufywD}
             $('bar-' + id).style.width = (pct * 100) + '%';
             $('time-' + id).textContent = t.toFixed(1) + 's / ' + totalTime + 's';
             $('step-' + id).textContent = 'Step ' + (step + 1) + '/' + STEPS;
-            $('frame-' + id).src = intermediatePath(selectedIdx, step);
 
             if (pct >= 1) {
-                $('frame-' + id).src = finalPath(selectedIdx);
+                var vid = $('frame-' + id);
+                try { vid.pause(); } catch (e) {}
+                // Snap to final high-res PNG via poster-like overlay: just seek to end
+                try { vid.currentTime = VIDEO_DUR; } catch (e) {}
                 $('badge-' + id).classList.add('show');
                 $('panel-' + id).classList.add('done-' + id);
                 return true;
@@ -921,9 +946,21 @@ url={https://openreview.net/forum?id=XI1CeufywD}
                 $('result').classList.add('show');
                 btn.disabled = false;
                 btn.textContent = 'Regenerate';
+                raf = null;
                 return;
             }
             raf = requestAnimationFrame(tick);
+        }
+
+        function startPlayback() {
+            ['ecf8', 'fp8'].forEach(function(id) {
+                var vid = $('frame-' + id);
+                var tt = id === 'ecf8' ? T_ECF8 : T_FP8;
+                try { vid.currentTime = 0; } catch (e) {}
+                vid.playbackRate = rateFor(tt);
+                var p = vid.play();
+                if (p && typeof p.catch === 'function') { p.catch(function() {}); }
+            });
         }
 
         thumbs.forEach(function(thumb, i) {
@@ -936,11 +973,13 @@ url={https://openreview.net/forum?id=XI1CeufywD}
             btn.disabled = true;
             btn.textContent = 'Generating...';
             startTime = Date.now();
+            startPlayback();
             raf = requestAnimationFrame(tick);
         });
 
-        // Preload first sample
-        for (var i = 0; i < STEPS; i++) { new Image().src = intermediatePath(0, i); }
+        // Initialize sources for sample 0
+        setVideoSources($('frame-ecf8'), 0);
+        setVideoSources($('frame-fp8'), 0);
     })();
 
     // Lightbox for figures
