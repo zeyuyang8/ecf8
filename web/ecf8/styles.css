@@ -534,7 +534,7 @@ a { color: var(--link-color); }
 }
 
 .section-figure--wide img {
-    max-height: 480px;
+    max-height: 360px;
 }
 
 /* Side-by-side figures */
