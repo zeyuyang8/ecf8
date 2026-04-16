@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="ECF8: Lossless GenAI Model Weights Compression with Exponent Concentration" />
+    <meta property="og:description" content="Up to 26.9% memory savings and 177.1% throughput acceleration for GenAI models with perfectly lossless FP8 compression." />
+    <meta name="description" content="ECF8 exploits exponent concentration in trained model weights to achieve lossless FP8 compression with significant memory savings and inference acceleration.">
+    <title>ECF8: Lossless GenAI Model Weights Compression</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+    <!-- Consolidated CSS -->
+    <link href="styles.css" rel="stylesheet">
+    <script>
+    (function() {
+        const storedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+        if (initialTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    })();
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" title="Toggle dark mode">
+        <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <!-- Header Section -->
+    <header class="header-section" id="overview">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-11 mx-auto text-center">
+                    <div class="venue-badge">ICLR 2026</div>
+                    <h1 class="paper-title">ECF8</h1>
+                    <p class="paper-subtitle">Lossless GenAI Model Weights Compression with Exponent Concentration</p>
+                    <div class="author-line">
+                        <span><a href="https://zeyuyang8.github.io/" class="author-link">Zeyu Yang<sup>1</sup></a></span>
+                        <span><a href="#" class="author-link">Tianyi Zhang<sup>1</sup></a></span>
+                        <span><a href="#" class="author-link">Jianwen Xie<sup>2</sup></a></span>
+                        <span><a href="#" class="author-link">Chuan Li<sup>2</sup></a></span>
+                        <span><a href="#" class="author-link">Zhaozhuo Xu<sup>3</sup></a></span>
+                        <span><a href="#" class="author-link">Anshumali Shrivastava<sup>1</sup></a></span>
+                    </div>
+
+                    <div class="institution-logos">
+                        <div class="institution-logo-wrapper">
+                            <img src="assets/logos/rice.svg" alt="Rice University" class="institution-logo">
+                            <sup>1</sup>
+                        </div>
+                        <div class="institution-logo-wrapper" style="margin-left: 20px;">
+                            <span style="font-size: 1.1rem; font-weight: 500; color: var(--text-color); opacity: 0.85;">Lambda, Inc.</span>
+                            <sup>2</sup>
+                        </div>
+                        <div class="institution-logo-wrapper" style="margin-left: 20px;">
+                            <span style="font-size: 1.1rem; font-weight: 500; color: var(--text-color); opacity: 0.85;">Stevens Institute of Technology</span>
+                            <sup>3</sup>
+                        </div>
+                    </div>
+
+                    <div class="paper-btn-wrapper">
+                        <a href="https://arxiv.org/abs/2510.02676" class="btn paper-btn"><i class="fas fa-file-alt me-2"></i>Paper<i class="fas fa-arrow-right ms-2"></i></a>
+                        <a href="https://github.com/zeyuyang8/ecf8" class="btn paper-btn paper-btn--outline"><i class="fab fa-github me-2"></i>Code</a>
+                        <a href="https://openreview.net/forum?id=XI1CeufywD" class="btn paper-btn paper-btn--outline"><i class="fas fa-comments me-2"></i>OpenReview</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- TL;DR Section -->
+        <section class="row sec-teal" id="tldr">
+            <div class="col-lg-11 mx-auto">
+                <h2 class="section-title" style="margin-top: 12px;">TL;DR</h2>
+                <div class="tldr-box rounded mb-3" style="padding: 22px 36px 24px 36px;">
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <p class="tldr-headline mb-0">
+                                GenAI weights exhibit
+                                <span class="tldr-keyword" data-color="secondary">exponent concentration<span class="keyword-tooltip">Floating-point exponents in trained model weights cluster within a narrow range with only 2-3 bits of entropy, far below the 4-8 bits allocated in standard formats.</span></span>,
+                                enabling
+                                <span class="tldr-keyword" data-color="primary">lossless FP8 compression<span class="keyword-tooltip">ECF8 uses Huffman coding on low-entropy exponents with GPU-optimized decoding, achieving bit-exact weight reconstruction with zero quality degradation.</span></span>
+                                that delivers
+                                <span class="tldr-keyword" data-color="accent">real inference speedup<span class="keyword-tooltip">Up to 26.9% memory savings free GPU memory for larger batch sizes, yielding up to 177.1% throughput acceleration on models up to 671B parameters.</span></span>.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p class="tldr-abstract mb-0">We present a theoretical and empirical study of an <em>exponent concentration</em> phenomenon in GenAI weights: exponents consistently exhibit low entropy across architectures and modalities. We trace this to $\alpha$-stable distributions induced by SGD and prove a compression limit near FP4.67. Building on these insights, we propose <strong>ECF8</strong>, a lossless FP8 compression framework with entropy-aware encoding and GPU-optimized decoding. Experiments on LLMs and DiTs up to 671B parameters demonstrate up to 26.9% memory savings and 177.1% throughput acceleration, with perfectly lossless computations.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key metrics -->
+                <div class="metrics-row">
+                    <div class="metric-card">
+                        <div class="metric-value">26.9%</div>
+                        <div class="metric-label">Memory Savings</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value metric-value--accent">177.1%</div>
+                        <div class="metric-label">Throughput Acceleration</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">671B</div>
+                        <div class="metric-label">Largest Model Tested</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value metric-value--accent">0</div>
+                        <div class="metric-label">Output Deviation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sticky Section Navigation -->
+        <nav id="section-nav" class="section-nav">
+            <div class="nav-mobile-header">
+                <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+                <span class="nav-mobile-title">ECF8</span>
+            </div>
+            <div class="section-nav-inner">
+                <a class="section-nav-link nav-top-link" data-section="overview"><i class="fas fa-arrow-up" style="font-size: 0.7em;"></i> Top</a>
+                <span class="section-nav-sep">&middot;</span>
+                <a class="section-nav-link nav-color-gold" data-section="sec-phenomenon">Phenomenon</a>
+                <span class="section-nav-sep">&middot;</span>
+                <a class="section-nav-link nav-color-gold" data-section="sec-theory">Theory</a>
+                <span class="section-nav-sep">&middot;</span>
+                <a class="section-nav-link nav-color-teal" data-section="sec-method">Method</a>
+                <span class="section-nav-sep">&middot;</span>
+                <a class="section-nav-link nav-color-blue" data-section="sec-results">Results</a>
+                <span class="section-nav-sep">&middot;</span>
+                <a class="section-nav-link nav-color-blue" data-section="sec-lossless">Lossless</a>
+            </div>
+        </nav>
+
+        <div class="sidebar-content-area">
+
+            <!-- Section 1: Exponent Concentration Phenomenon -->
+            <section id="sec-phenomenon" class="sec-gold">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <h2 class="section-title">Exponent Concentration in GenAI Weights</h2>
+
+                        <p class="body-text">
+                            In low-precision floating-point formats (BF16, FP8), each weight is encoded as $x = (-1)^s \cdot 2^E \cdot M$, where $s$ is the sign bit, $E$ is the exponent, and $M$ is the mantissa. Standard formats allocate 4-8 bits for exponents, assuming they spread across the full range. But do they?
+                        </p>
+
+                        <p class="body-text">
+                            We empirically examine weights from GenAI models spanning LLMs, diffusion transformers, and mixture-of-experts architectures. Across all models, the exponents consistently cluster within a narrow range, with Shannon entropy of only 2-3 bits &mdash; far below the 4-8 bits allocated in standard formats. This persistent low-entropy phenomenon strongly suggests an underlying distributional principle.
+                        </p>
+
+                        <div class="section-figure-row section-figure--wide section-figure--framed">
+                            <div class="section-figure-col">
+                                <img src="assets/figures/entropy_dsr1.png" alt="Entropy analysis for DeepSeek-R1" loading="lazy">
+                            </div>
+                            <div class="section-figure-col">
+                                <img src="assets/figures/entropy_llama3.3.png" alt="Entropy analysis for Llama 3.3" loading="lazy">
+                            </div>
+                            <div class="section-figure-col">
+                                <img src="assets/figures/entropy_flux.png" alt="Entropy analysis for FLUX.1" loading="lazy">
+                            </div>
+                        </div>
+                        <p class="section-caption">
+                            <strong>Exponent entropy is consistently low across architectures.</strong> Layer-wise entropy analysis for DeepSeek-R1 (671B), Llama 3.3 (70B), and FLUX.1 shows exponent entropy clustering around 2-3 bits, far below the allocated bitwidth.
+                        </p>
+
+                        <div class="section-figure-row section-figure--wide section-figure--framed">
+                            <div class="section-figure-col">
+                                <img src="assets/figures/entropy_qwen3-235b.png" alt="Entropy analysis for Qwen3-235B" loading="lazy">
+                            </div>
+                            <div class="section-figure-col">
+                                <img src="assets/figures/entropy_wan2.1.png" alt="Entropy analysis for Wan2.1" loading="lazy">
+                            </div>
+                            <div class="section-figure-col">
+                                <img src="assets/figures/entropy_wan2.2.png" alt="Entropy analysis for Wan2.2" loading="lazy">
+                            </div>
+                        </div>
+                        <p class="section-caption">
+                            <strong>The phenomenon persists across modalities.</strong> MoE models (Qwen3-235B), video generation models (Wan2.1, Wan2.2), and multimodal models all exhibit the same exponent concentration pattern.
+                        </p>
+
+                        <div class="callout callout--gold">
+                            <p>
+                                <strong>Key Observation:</strong> Floating-point exponents in trained GenAI weights do not spread uniformly &mdash; they concentrate within a narrow range with only 2-3 bits of entropy. This creates significant headroom for lossless compression.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="section-divider">
+
+            <!-- Section 2: Theoretical Foundation -->
+            <section id="sec-theory" class="sec-gold">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <h2 class="section-title">Why Exponents Concentrate</h2>
+
+                        <p class="body-text">
+                            The exponent concentration is not coincidental &mdash; it arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(|\Delta_t| > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing the theoretical foundation for exponent concentration.
+                        </p>
+
+                        <div class="math-block">
+                            <strong>Theorem (Exponent Entropy Concentration).</strong> Let $E = \lfloor \log_2 |X| \rfloor$ where $X \sim S_\alpha$. Then $E$ follows a two-sided geometric distribution with parameter $q = 2^{-\alpha}$, and the Shannon entropy is bounded by:
+                            $$\frac{\alpha}{1 + 2^{-\alpha}} \;\leq\; H(E) \;\leq\; \frac{\alpha}{1 - 2^{-\alpha}}$$
+                        </div>
+
+                        <p class="body-text">
+                            This theorem shows that exponents decay geometrically from zero with rate $2^{-\alpha}$, guaranteeing finite entropy regardless of $\alpha$. For the Gaussian-like case ($\alpha=2$), the entropy bound gives $1.6 \leq H(E) \leq 2.67$ bits. Including the sign bit and minimal mantissa, the absolute compression floor is approximately:
+                        </p>
+
+                        <div class="math-block">
+                            $$\underbrace{2.67}_{\text{exponent}} + \underbrace{1}_{\text{sign}} + \underbrace{1}_{\text{mantissa}} \;\approx\; \textbf{FP4.67}$$
+                        </div>
+
+                        <p class="body-text">
+                            While FP4.67 is impractical due to hardware alignment constraints, it motivates our practical FP8 format: ECF8 is close to the entropy-driven theoretical limit while retaining sufficient mantissa precision and hardware compatibility.
+                        </p>
+
+                        <div class="callout callout--gold">
+                            <p>
+                                <strong>Theoretical Insight:</strong> Exponent concentration is a statistical law of trained neural networks, arising naturally from $\alpha$-stable dynamics of SGD. The theoretical compression limit is FP4.67, establishing ECF8's FP8 format as a principled engineering choice.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="section-divider">
+
+            <!-- Section 3: ECF8 Method -->
+            <section id="sec-method" class="sec-teal">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <h2 class="section-title">ECF8: From Theory to Practice</h2>
+
+                        <p class="body-text">
+                            ECF8 is a lossless compression framework with three core components: entropy-aware <strong>encoding</strong> via Huffman coding on FP8 exponents, a highly parallel GPU <strong>decoding</strong> kernel, and a dynamic <strong>tensor management</strong> system for memory-efficient inference.
+                        </p>
+
+                        <h3 class="subsection-title">Encoding: Huffman Coding on Exponents</h3>
+
+                        <p class="body-text">
+                            FP8 weights allocate 4 bits for exponents, but exponent entropy is substantially lower. ECF8 exploits this gap through Huffman coding: frequent exponents get shorter codes, rare ones get longer codes. The encoding pipeline builds optimal Huffman trees from weight exponent frequencies, constructs hierarchical lookup tables for GPU-friendly decoding, and generates synchronization metadata for parallel decompression.
+                        </p>
+
+                        <div class="section-figure section-figure--wide section-figure--framed">
+                            <img src="assets/figures/lookup_table.png" alt="Hierarchical lookup table construction for Huffman decoding" loading="lazy">
+                        </div>
+                        <p class="section-caption">
+                            <strong>Hierarchical lookup table construction.</strong> A Huffman tree is built from symbol frequencies. Multi-level lookup tables enable efficient variable-length code decoding aligned with GPU memory architecture.
+                        </p>
+
+                        <h3 class="subsection-title">Decoding: GPU-Optimized Parallel Decompression</h3>
+
+                        <p class="body-text">
+                            The decoding kernel reconstructs exponents from the Huffman-encoded bitstream using five phases: memory initialization, data loading, parallel counting (computing symbol counts via parallel reduction), coordinated decoding, and coalesced global memory write-back. This design maximizes GPU parallelism through careful thread-local computation and block-level synchronization.
+                        </p>
+
+                        <h3 class="subsection-title">Tensor Management: Just-in-Time Decompression</h3>
+
+                        <p class="body-text">
+                            ECF8 implements just-in-time decompression using PyTorch forward hooks. A single pre-allocated GPU buffer (sized to the largest layer) is reused across layers, enabling memory-efficient inference with constant overhead regardless of model depth. This transforms memory compression into real inference acceleration.
+                        </p>
+
+                        <div class="callout callout--teal">
+                            <p>
+                                <strong>Design Principle:</strong> ECF8 transforms memory savings into inference speedup &mdash; smaller footprint allows larger batch sizes, which enables higher throughput and lower per-request latency.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="section-divider">
+
+            <!-- Section 4: Results -->
+            <section id="sec-results" class="sec-blue">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <h2 class="section-title">Results</h2>
+
+                        <p class="body-text">
+                            We evaluate ECF8 across nine models spanning LLMs, DiTs, and MoE architectures from 8B to 671B parameters. ECF8 achieves 9.8%-26.9% memory savings and 11.3%-177.1% throughput acceleration, all while maintaining bit-exact weight reconstruction.
+                        </p>
+
+                        <h3 class="subsection-title">Memory Savings &amp; Throughput Improvements</h3>
+
+                        <div class="results-table-wrapper">
+                            <table class="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>Memory (GB)</th>
+                                        <th>Memory &darr;</th>
+                                        <th>Supported Machine</th>
+                                        <th>Throughput &uarr;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>DeepSeek-R1-0528</td>
+                                        <td>623 &rarr; 530</td>
+                                        <td class="highlight-cell">14.8%</td>
+                                        <td>8&times;H100 (80 GB)</td>
+                                        <td class="highlight-cell">150.3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qwen3-235B-A22B</td>
+                                        <td>218 &rarr; 186</td>
+                                        <td class="highlight-cell">14.4%</td>
+                                        <td>4&times;H100 (80 GB)</td>
+                                        <td class="highlight-cell">35.9%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Llama-3.3-70B</td>
+                                        <td>63.8 &rarr; 54.7</td>
+                                        <td class="highlight-cell">13.4%</td>
+                                        <td>1&times;H100 (80 GB)</td>
+                                        <td class="highlight-cell">11.3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qwen3-Coder-30B</td>
+                                        <td>27.9 &rarr; 23.7</td>
+                                        <td class="highlight-cell">14.3%</td>
+                                        <td>1&times;RTX5090 (32 GB)</td>
+                                        <td class="highlight-cell">23.7%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qwen3-8B</td>
+                                        <td>6.5 &rarr; 5.6</td>
+                                        <td class="highlight-cell">9.8%</td>
+                                        <td>1&times;RTX4070 (12 GB)</td>
+                                        <td class="highlight-cell">12.6%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FLUX.1-dev</td>
+                                        <td>10.5 &rarr; 8.3</td>
+                                        <td class="highlight-cell">14.1%</td>
+                                        <td>1&times;RTX4070 (12 GB)</td>
+                                        <td class="highlight-cell">177.1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wan2.1-T2V-14B</td>
+                                        <td>17.4 &rarr; 12.7</td>
+                                        <td class="highlight-cell">25.4%</td>
+                                        <td>1&times;RTX4080 (16 GB)</td>
+                                        <td class="highlight-cell">55.1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wan2.2-T2V-A14B</td>
+                                        <td>30.5 &rarr; 21.9</td>
+                                        <td class="highlight-cell">26.9%</td>
+                                        <td>1&times;RTX4090 (24 GB)</td>
+                                        <td class="highlight-cell">108.3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qwen-Image</td>
+                                        <td>26.2 &rarr; 20.6</td>
+                                        <td class="highlight-cell">21.0%</td>
+                                        <td>1&times;RTX4090 (24 GB)</td>
+                                        <td class="highlight-cell">126.6%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="section-caption">
+                            <strong>ECF8 delivers consistent benefits across scales and modalities.</strong> Memory reductions enable deployment on lower-capacity hardware. Under fixed memory constraints, ECF8 supports larger batch sizes, translating into throughput improvements.
+                        </p>
+
+                        <h3 class="subsection-title">Inference Acceleration Under Fixed Memory</h3>
+
+                        <p class="body-text">
+                            Under fixed memory constraints, ECF8 enables significantly larger batch sizes. For DeepSeek-R1-0528 at 640 GB, ECF8 supports batch size 16 vs. FP8's batch size 2, delivering 150.3% higher throughput and 60.1% lower per-request latency. For diffusion models, FLUX.1-dev achieves 45.9% latency reduction, and Qwen-Image achieves 55.9% step-latency improvement.
+                        </p>
+
+
+                        <div class="callout callout--blue">
+                            <p>
+                                <strong>Practical Impact:</strong> ECF8 enables deploying DeepSeek-R1 (671B) on 8&times;H100 instead of 8&times;H200, and Wan2.1-T2V-14B fits on a single RTX4080 where uncompressed FP8 exceeds memory limits.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="section-divider">
+
+            <!-- Section 5: Lossless Verification -->
+            <section id="sec-lossless" class="sec-blue">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <h2 class="section-title">Perfectly Lossless Compression</h2>
+
+                        <p class="body-text">
+                            Unlike lossy quantization methods, ECF8 guarantees <strong>bit-exact</strong> weight reconstruction. The numerical difference between outputs from ECF8-compressed and original FP8 models is perfectly zero &mdash; not approximately zero, but <em>exactly</em> zero. Below are images generated by the ECF8-compressed Qwen-Image model, pixel-identical to the original FP8 model's outputs using the same random seed and inference parameters.
+                        </p>
+
+                        <div class="image-grid">
+                            <img src="assets/figures/qwen_image_0.png" alt="ECF8 Qwen-Image sample 1" loading="lazy">
+                            <img src="assets/figures/qwen_image_1.png" alt="ECF8 Qwen-Image sample 2" loading="lazy">
+                            <img src="assets/figures/qwen_image_2.png" alt="ECF8 Qwen-Image sample 3" loading="lazy">
+                            <img src="assets/figures/qwen_image_3.png" alt="ECF8 Qwen-Image sample 4" loading="lazy">
+                            <img src="assets/figures/qwen_image_4.png" alt="ECF8 Qwen-Image sample 5" loading="lazy">
+                            <img src="assets/figures/qwen_image_5.png" alt="ECF8 Qwen-Image sample 6" loading="lazy">
+                            <img src="assets/figures/qwen_image_6.png" alt="ECF8 Qwen-Image sample 7" loading="lazy">
+                            <img src="assets/figures/qwen_image_7.png" alt="ECF8 Qwen-Image sample 8" loading="lazy">
+                            <img src="assets/figures/qwen_image_8.png" alt="ECF8 Qwen-Image sample 9" loading="lazy">
+                            <img src="assets/figures/qwen_image_9.png" alt="ECF8 Qwen-Image sample 10" loading="lazy">
+                        </div>
+                        <p class="section-caption">
+                            <strong>Pixel-perfect reconstruction.</strong> Images generated by ECF8-compressed Qwen-Image are identical to the original FP8 model. The numerical difference is <em>exactly</em> zero.
+                        </p>
+
+                        <div class="callout callout--blue">
+                            <p>
+                                <strong>Lossless Guarantee:</strong> ECF8 preserves full model fidelity &mdash; no accuracy degradation, no generative quality loss, no artifacts. Outputs are bit-for-bit identical to the original FP8 model.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Invitation to the full paper -->
+            <p class="paper-invite">
+                This page highlights our key findings. The full paper contains additional experiments, theoretical proofs, kernel-level benchmarks, and vLLM integration details &mdash; we invite interested readers to <a href="https://arxiv.org/abs/2510.02676">read the paper</a> for the complete picture.
+            </p>
+
+            <!-- Citation Section -->
+            <section id="citation" class="mt-2">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <h2 class="section-title">Citation</h2>
+                        <div class="citation-block">
+                            <button class="copy-citation-btn" onclick="copyCitation(this)" title="Copy to clipboard">
+                                <i class="fas fa-copy"></i><span>Copy</span>
+                            </button>
+                            <pre><code>@inproceedings{
+yang2026to,
+title={To Compress or Not? Pushing the Frontier of Lossless Gen{AI} Model Weights Compression with Exponent Concentration},
+author={Zeyu Yang and Tianyi Zhang and Jianwen Xie and Chuan Li and Zhaozhuo Xu and Anshumali Shrivastava},
+booktitle={The Fourteenth International Conference on Learning Representations},
+year={2026},
+url={https://openreview.net/forum?id=XI1CeufywD}
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- end sidebar-content-area -->
+    </main>
+
+    <!-- Image Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>Questions? Contact <a href="https://zeyuyang8.github.io/">Zeyu Yang</a>.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+    (function() {
+        const sectionNav = document.getElementById('section-nav');
+        const navLinks = document.querySelectorAll('.section-nav-link');
+        const sections = [];
+
+        navLinks.forEach(link => {
+            const id = link.getAttribute('data-section');
+            const el = document.getElementById(id);
+            if (el) sections.push({ id, el, link });
+        });
+
+        function updateNavVisibility() {
+            const tldr = document.getElementById('tldr');
+            if (!tldr || !sectionNav) return;
+            const tldrBottom = tldr.offsetTop + tldr.offsetHeight;
+            sectionNav.classList.toggle('visible', window.scrollY > tldrBottom - 100);
+        }
+
+        function updateActiveSection() {
+            const scrollY = window.scrollY + 200;
+            let current = sections[0];
+            for (const section of sections) {
+                if (section.el.offsetTop <= scrollY) current = section;
+            }
+            navLinks.forEach(link => link.classList.remove('active'));
+            if (current) current.link.classList.add('active');
+        }
+
+        window.addEventListener('scroll', () => {
+            updateNavVisibility();
+            updateActiveSection();
+        });
+        updateNavVisibility();
+        updateActiveSection();
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const id = this.getAttribute('data-section');
+                const target = document.getElementById(id);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                sectionNav.classList.remove('menu-open');
+                const hamburger = document.getElementById('nav-hamburger');
+                if (hamburger) hamburger.classList.remove('open');
+            });
+        });
+
+        const hamburger = document.getElementById('nav-hamburger');
+        if (hamburger) {
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('open');
+                sectionNav.classList.toggle('menu-open');
+            });
+        }
+
+        // Touch-friendly tooltips
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.tldr-keyword').forEach(kw => {
+                kw.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const wasActive = this.classList.contains('tooltip-active');
+                    document.querySelectorAll('.tldr-keyword').forEach(k => k.classList.remove('tooltip-active'));
+                    if (!wasActive) this.classList.add('tooltip-active');
+                });
+            });
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.tldr-keyword')) {
+                    document.querySelectorAll('.tldr-keyword').forEach(k => k.classList.remove('tooltip-active'));
+                }
+            });
+        }
+    })();
+
+    (function() {
+        const toggleButton = document.getElementById('theme-toggle');
+        if (!toggleButton) return;
+
+        function getCurrentTheme() {
+            return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                toggleButton.setAttribute('aria-label', 'Switch to light mode');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                toggleButton.setAttribute('aria-label', 'Switch to dark mode');
+            }
+        }
+
+        applyTheme(getCurrentTheme());
+
+        toggleButton.addEventListener('click', function() {
+            const nextTheme = getCurrentTheme() === 'dark' ? 'light' : 'dark';
+            applyTheme(nextTheme);
+            localStorage.setItem('theme', nextTheme);
+        });
+    })();
+
+    // Lightbox for figures
+    document.querySelectorAll('.section-figure img, .section-figure-col img, .section-figure--tall img, .image-grid img').forEach(img => {
+        img.addEventListener('click', function() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = this.src;
+            lightboxImg.alt = this.alt;
+            lightbox.classList.add('open');
+        });
+    });
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    function copyCitation(btn) {
+        const pre = btn.closest('.citation-block').querySelector('code');
+        const text = pre.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const icon = btn.querySelector('i');
+            const label = btn.querySelector('span');
+            icon.className = 'fas fa-check';
+            label.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                icon.className = 'fas fa-copy';
+                label.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+    </script>
+</body>
+</html>
