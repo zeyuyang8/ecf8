@@ -63,7 +63,7 @@ a { color: var(--link-color); }
     font-weight: 600;
     font-size: 3.4rem;
     line-height: 1.15;
-    margin-bottom: 6px;
+    margin-bottom: 24px;
     position: relative;
     z-index: 1;
     display: block;
@@ -172,11 +172,12 @@ a { color: var(--link-color); }
     align-items: center;
     margin: 0 10px;
     position: relative;
+    height: 64px;
 }
 
 .institution-logo-wrapper sup {
     position: absolute;
-    top: -5px;
+    top: 0px;
     left: -12px;
     font-size: 0.9rem;
     color: var(--text-color);
@@ -197,7 +198,7 @@ a { color: var(--link-color); }
 
 .institution-logo--tall {
     width: auto;
-    max-height: 48px;
+    max-height: 68px;
 }
 
 /* Paper buttons */
