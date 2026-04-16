@@ -20,9 +20,6 @@ kernels
 lm-eval
 gpustat
 
-# Third-party libraries
-git+https://github.com/modelscope/DiffSynth-Studio.git
-
 # CUDA
 cupy-cuda12x
 

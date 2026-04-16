@@ -4,5 +4,7 @@ dfloat-models/
 private/
 wandb/
 scripts/data/
+scripts/models
+scripts/results
 __pycache__/
 *.egg-info/

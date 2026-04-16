@@ -1,28 +1,25 @@
-import json
+import torch
 import math
 import os
 import re
+import json
 from sys import stderr
-from typing import Dict, Optional, Union
+from typing import Optional, Dict, Union
+from tqdm import tqdm
+
+import torch.nn as nn
 
 import cupy as cp
-import torch
-import torch.nn as nn
-from accelerate import dispatch_model, infer_auto_device_map
+
+from accelerate import infer_auto_device_map, dispatch_model
 from accelerate.utils import get_balanced_memory
-from diffsynth.core.vram.layers import AutoWrappedLinear
 from huggingface_hub import snapshot_download
 from safetensors.torch import load_file
-from tqdm import tqdm
-from transformers import AutoConfig, AutoModelForCausalLM
-from transformers.modeling_utils import no_init_weights
+from transformers import AutoModelForCausalLM, AutoConfig
+from diffsynth.vram_management.layers import AutoWrappedLinear
 
-from ..const import get_default_no_split_pattern
 from ..utils import report_model_size
-
-# # Load CUDA kernel for custom DFloat decoding
-# ptx_path = os.path.join(os.path.dirname(__file__), 'decode.ptx')
-# _decode = cp.RawModule(path=ptx_path).get_function('decode')
+from ..const import get_default_no_split_pattern
 
 # Load CUDA kernel for custom DFloat decoding
 kernel_path = os.path.join(os.path.dirname(__file__), "decode.cu")
@@ -280,8 +277,8 @@ def load_and_replace_tensors(model, directory_path, dfloat_config):
 
 def load_and_replace_tensors_parallel(model, directory_path, dfloat_config):
     import concurrent.futures
-    import gc
     from concurrent.futures import ThreadPoolExecutor
+    import gc
 
     threads_per_block = dfloat_config["threads_per_block"]
     bytes_per_thread = dfloat_config["bytes_per_thread"]
@@ -579,7 +576,7 @@ class DFloatDiffSynthModelFP8:
         device: Optional[str] = "cuda",
     ):
         if model_name_or_path == "black-forest-labs/FLUX.1-dev":
-            from diffsynth.pipelines.flux_image import (
+            from diffsynth.pipelines.flux_image_new import (
                 FluxImagePipeline,
                 ModelConfig,
             )
@@ -611,7 +608,7 @@ class DFloatDiffSynthModelFP8:
                 ],
             )
         elif model_name_or_path == "Wan-AI/Wan2.1-T2V-14B":
-            from diffsynth.pipelines.wan_video import ModelConfig, WanVideoPipeline
+            from diffsynth.pipelines.wan_video_new import WanVideoPipeline, ModelConfig
 
             pipe = WanVideoPipeline.from_pretrained(
                 torch_dtype=torch.bfloat16,
@@ -635,7 +632,7 @@ class DFloatDiffSynthModelFP8:
                 ],
             )
         elif model_name_or_path == "Wan-AI/Wan2.2-T2V-A14B":
-            from diffsynth.pipelines.wan_video import ModelConfig, WanVideoPipeline
+            from diffsynth.pipelines.wan_video_new import WanVideoPipeline, ModelConfig
 
             pipe = WanVideoPipeline.from_pretrained(
                 torch_dtype=torch.bfloat16,
@@ -664,7 +661,7 @@ class DFloatDiffSynthModelFP8:
                 ],
             )
         elif model_name_or_path == "Qwen/Qwen-Image":
-            from diffsynth.pipelines.qwen_image import ModelConfig, QwenImagePipeline
+            from diffsynth.pipelines.qwen_image import QwenImagePipeline, ModelConfig
 
             pipe = QwenImagePipeline.from_pretrained(
                 torch_dtype=torch.bfloat16,

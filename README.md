@@ -13,6 +13,7 @@ conda create -n ecf python=3.12
 conda activate ecf
 pip install nv
 uv pip install -r requirements.txt
+pip install --no-build-isolation git+https://github.com/modelscope/DiffSynth-Studio.git@084bc2f
 pip install -e . && rm -rf dfloat.egg-info
 ```
 
