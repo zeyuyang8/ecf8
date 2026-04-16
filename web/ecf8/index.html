@@ -19,41 +19,14 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
     <!-- Consolidated CSS -->
     <link href="styles.css" rel="stylesheet">
-    <script>
-    (function() {
-        const storedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
-        if (initialTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        }
-    })();
-    </script>
 </head>
 <body>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" title="Toggle dark mode">
-        <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-        <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-    </button>
 
     <!-- Header Section -->
     <header class="header-section" id="overview">
         <div class="container">
             <div class="row">
                 <div class="col-lg-11 mx-auto text-center">
-                    <div class="venue-badge"><img src="assets/logos/iclr.png" alt="ICLR" class="venue-logo">ICLR 2026</div>
                     <h1 class="paper-title">ECF8: Lossless GenAI Model Weights Compression with Exponent Concentration</h1>
                     <div class="author-line">
                         <span><a href="https://zeyuyang8.github.io/" class="author-link">Zeyu Yang<sup>1</sup></a></span>
@@ -79,8 +52,10 @@
                         </div>
                     </div>
 
+                    <div class="venue-badge">ICLR 2026</div>
+
                     <div class="paper-btn-wrapper">
-                        <a href="https://arxiv.org/abs/2510.02676" class="btn paper-btn"><i class="fas fa-file-alt me-2"></i>Paper<i class="fas fa-arrow-right ms-2"></i></a>
+                        <a href="https://arxiv.org/abs/2510.02676" class="btn paper-btn paper-btn--outline"><i class="fas fa-file-alt me-2"></i>arXiv</a>
                         <a href="https://github.com/zeyuyang8/ecf8" class="btn paper-btn paper-btn--outline"><i class="fab fa-github me-2"></i>Code</a>
                         <a href="https://openreview.net/forum?id=XI1CeufywD" class="btn paper-btn paper-btn--outline"><i class="fas fa-comments me-2"></i>OpenReview</a>
                     </div>
@@ -156,6 +131,8 @@
                 <span class="section-nav-sep">&middot;</span>
                 <a class="section-nav-link nav-color-blue" data-section="sec-results">Results</a>
                 <span class="section-nav-sep">&middot;</span>
+                <a class="section-nav-link nav-color-blue" data-section="sec-demo">Demo</a>
+                <span class="section-nav-sep">&middot;</span>
                 <a class="section-nav-link nav-color-blue" data-section="sec-lossless">Lossless</a>
             </div>
         </nav>
@@ -223,8 +200,7 @@
                             The exponent concentration is not coincidental &mdash; it arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(|\Delta_t| > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing a rigorous foundation for exponent concentration.
                         </p>
 
-                        <div class="math-block">
-                            <strong>Theorem (Exponent Entropy Concentration).</strong> Let $E = \lfloor \log_2 |X| \rfloor$ where $X \sim S_\alpha$. Then $E$ follows a two-sided geometric distribution with parameter $q = 2^{-\alpha}$, and the Shannon entropy is bounded by:
+                        <div class="math-block"><strong>Theorem (Exponent Entropy Concentration).</strong> Let $E = \lfloor \log_2 |X| \rfloor$ where $X \sim S_\alpha$. Then $E$ follows a two-sided geometric distribution with parameter $q = 2^{-\alpha}$, and the Shannon entropy is bounded by:
                             $$\frac{\alpha}{1 + 2^{-\alpha}} \;\leq\; H(E) \;\leq\; \frac{\alpha}{1 - 2^{-\alpha}}$$
                         </div>
 
@@ -584,7 +560,64 @@
 
             <hr class="section-divider">
 
-            <!-- Section 5: Lossless Verification -->
+            <!-- Section 5: Interactive Demo -->
+            <section id="sec-demo" class="sec-blue">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <h2 class="section-title">Interactive Demo</h2>
+                        <div class="ecf8-demo-wrapper">
+                            <div class="ecf8-demo-header">
+                                <p class="ecf8-demo-subtitle">FLUX.1-dev on single GH200 GPU (96 GB) &middot; DiffSynth &middot; Playback at 4&times; speed</p>
+                                <div class="ecf8-thumb-row">
+                                    <img class="ecf8-thumb active" src="assets/figures/flux_sample_1.png" data-idx="0" alt="Sample 1">
+                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_2.png" data-idx="1" alt="Sample 2">
+                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_3.png" data-idx="2" alt="Sample 3">
+                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_4.png" data-idx="3" alt="Sample 4">
+                                    <img class="ecf8-thumb" src="assets/figures/flux_sample_5.png" data-idx="4" alt="Sample 5">
+                                </div>
+                                <button class="ecf8-demo-btn" id="ecf8GenBtn">Generate Image</button>
+                            </div>
+                            <div class="ecf8-panels">
+                                <div class="ecf8-panel" id="ecf8-panel-ecf8">
+                                    <div class="ecf8-panel-header">
+                                        <span class="ecf8-panel-label ecf8">ECF8 (Ours)</span>
+                                        <span class="ecf8-badge ecf8" id="ecf8-badge-ecf8">13s</span>
+                                    </div>
+                                    <div class="ecf8-image-box">
+                                        <img class="preview" id="ecf8-preview-ecf8" src="assets/figures/flux_sample_1.png" alt="">
+                                        <div class="ecf8-spinner-wrap" id="ecf8-spinner-ecf8"><div class="ecf8-spinner ecf8"></div><span class="ecf8-spinner-text">Generating...</span></div>
+                                        <img class="result" id="ecf8-img-ecf8" src="assets/figures/flux_sample_1.png" alt="ECF8 generated">
+                                    </div>
+                                    <div class="ecf8-progress-wrap">
+                                        <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar ecf8" id="ecf8-bar-ecf8"></div></div>
+                                        <div class="ecf8-progress-info"><span id="ecf8-time-ecf8">0.0s / 13s</span><span id="ecf8-pct-ecf8">0%</span></div>
+                                    </div>
+                                </div>
+                                <div class="ecf8-panel" id="ecf8-panel-fp8">
+                                    <div class="ecf8-panel-header">
+                                        <span class="ecf8-panel-label fp8">FP8 Baseline</span>
+                                        <span class="ecf8-badge fp8" id="ecf8-badge-fp8">24s</span>
+                                    </div>
+                                    <div class="ecf8-image-box">
+                                        <img class="preview" id="ecf8-preview-fp8" src="assets/figures/flux_sample_1.png" alt="">
+                                        <div class="ecf8-spinner-wrap" id="ecf8-spinner-fp8"><div class="ecf8-spinner fp8"></div><span class="ecf8-spinner-text">Generating...</span></div>
+                                        <img class="result" id="ecf8-img-fp8" src="assets/figures/flux_sample_1.png" alt="FP8 generated">
+                                    </div>
+                                    <div class="ecf8-progress-wrap">
+                                        <div class="ecf8-progress-bar-bg"><div class="ecf8-progress-bar fp8" id="ecf8-bar-fp8"></div></div>
+                                        <div class="ecf8-progress-info"><span id="ecf8-time-fp8">0.0s / 24s</span><span id="ecf8-pct-fp8">0%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ecf8-result-banner" id="ecf8-result"><strong>Pixel-identical outputs.</strong> ECF8 finished in 13s, <strong>45.9% faster</strong> than FP8 (24s) &mdash; with bit-for-bit identical results.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="section-divider">
+
+            <!-- Section 6: Lossless Verification -->
             <section id="sec-lossless" class="sec-blue">
                 <div class="row">
                     <div class="col-lg-11 mx-auto">
@@ -608,6 +641,54 @@
                         </div>
                         <p class="section-caption">
                             <strong>Pixel-perfect reconstruction.</strong> Images generated by ECF8-compressed Qwen-Image are identical to the original FP8 model. The numerical difference is <em>exactly</em> zero.
+                        </p>
+
+                        <h3 class="subsection-title">LLM Benchmark Verification</h3>
+
+                        <p class="body-text">
+                            Beyond visual outputs, we verify lossless compression on standard LLM benchmarks. ECF8 and FP8 yield identical scores across all tasks, confirming bit-perfect reconstruction.
+                        </p>
+
+                        <div class="results-table-wrapper">
+                            <table class="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Benchmark</th>
+                                        <th>Metric</th>
+                                        <th>FP8</th>
+                                        <th>ECF8</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>GSM8K</td>
+                                        <td>Exact Match</td>
+                                        <td>0.876 &pm; 0.009</td>
+                                        <td>0.876 &pm; 0.009</td>
+                                    </tr>
+                                    <tr>
+                                        <td>BoolQ</td>
+                                        <td>Accuracy</td>
+                                        <td>0.867 &pm; 0.006</td>
+                                        <td>0.867 &pm; 0.006</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PIQA</td>
+                                        <td>Accuracy</td>
+                                        <td>0.764 &pm; 0.010</td>
+                                        <td>0.764 &pm; 0.010</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Winogrande</td>
+                                        <td>Accuracy</td>
+                                        <td>0.691 &pm; 0.013</td>
+                                        <td>0.691 &pm; 0.013</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="section-caption">
+                            <strong>Numerical verification of lossless compression for Qwen3-8B-FP8.</strong> ECF8 and FP8 yield identical scores across all tasks, confirming bit-perfect reconstruction.
                         </p>
 
                         <div class="callout callout--blue">
@@ -737,30 +818,95 @@ url={https://openreview.net/forum?id=XI1CeufywD}
         }
     })();
 
+    // ECF8 Demo
     (function() {
-        const toggleButton = document.getElementById('theme-toggle');
-        if (!toggleButton) return;
+        var T1 = 13, T2 = 24, SPD = 4;
+        var raf = null, st = 0, d1 = false, d2 = false;
+        var btn = document.getElementById('ecf8GenBtn');
+        var samples = [
+            'assets/figures/flux_sample_1.png',
+            'assets/figures/flux_sample_2.png',
+            'assets/figures/flux_sample_3.png',
+            'assets/figures/flux_sample_4.png',
+            'assets/figures/flux_sample_5.png'
+        ];
+        var thumbs = document.querySelectorAll('.ecf8-thumb');
+        var selectedIdx = 0;
 
-        function getCurrentTheme() {
-            return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        function $(id) { return document.getElementById('ecf8-' + id); }
+
+        thumbs.forEach(function(thumb) {
+            thumb.addEventListener('click', function() {
+                thumbs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+                selectedIdx = parseInt(this.getAttribute('data-idx'));
+                // Update preview images
+                ['ecf8', 'fp8'].forEach(function(k) {
+                    $('preview-' + k).src = samples[selectedIdx];
+                    $('img-' + k).src = samples[selectedIdx];
+                });
+            });
+        });
+
+        function reset() {
+            ['ecf8', 'fp8'].forEach(function(k) {
+                var tt = k === 'ecf8' ? T1 : T2;
+                $('panel-' + k).classList.remove('done-ecf8', 'done-fp8');
+                $('badge-' + k).classList.remove('show');
+                $('img-' + k).classList.remove('show');
+                $('spinner-' + k).classList.remove('show');
+                $('preview-' + k).classList.remove('hide');
+                $('bar-' + k).style.width = '0%';
+                $('time-' + k).textContent = '0.0s / ' + tt + 's';
+                $('pct-' + k).textContent = '0%';
+            });
+            $('result').classList.remove('show');
+            d1 = false; d2 = false;
         }
 
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                toggleButton.setAttribute('aria-label', 'Switch to light mode');
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                toggleButton.setAttribute('aria-label', 'Switch to dark mode');
+        function upd(id, tt, el) {
+            var e = Math.min(el, tt);
+            var p = Math.min(el / tt * 100, 100);
+            $('bar-' + id).style.width = p + '%';
+            $('time-' + id).textContent = e.toFixed(1) + 's / ' + tt + 's';
+            $('pct-' + id).textContent = Math.round(p) + '%';
+            if (p >= 100) {
+                $('spinner-' + id).classList.remove('show');
+                $('img-' + id).classList.add('show');
+                $('badge-' + id).classList.add('show');
+                $('panel-' + id).classList.add('done-' + id);
+                return true;
             }
+            return false;
         }
 
-        applyTheme(getCurrentTheme());
+        function tick() {
+            var el = (Date.now() - st) / 1000 * SPD;
+            if (!d1) d1 = upd('ecf8', T1, el);
+            if (!d2) d2 = upd('fp8', T2, el);
+            if (d1 && d2) {
+                $('result').classList.add('show');
+                btn.disabled = false;
+                btn.textContent = 'Regenerate';
+                return;
+            }
+            raf = requestAnimationFrame(tick);
+        }
 
-        toggleButton.addEventListener('click', function() {
-            const nextTheme = getCurrentTheme() === 'dark' ? 'light' : 'dark';
-            applyTheme(nextTheme);
-            localStorage.setItem('theme', nextTheme);
+        btn.addEventListener('click', function() {
+            if (raf) cancelAnimationFrame(raf);
+            reset();
+            var img = samples[selectedIdx];
+            ['ecf8', 'fp8'].forEach(function(k) {
+                $('preview-' + k).src = img;
+                $('img-' + k).src = img;
+                $('preview-' + k).classList.add('hide');
+                $('spinner-' + k).classList.add('show');
+            });
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+            st = Date.now();
+            raf = requestAnimationFrame(tick);
         });
     })();
 
