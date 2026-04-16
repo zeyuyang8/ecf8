@@ -85,7 +85,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <p class="tldr-abstract mb-0">We present a theoretical and empirical study of <em>exponent concentration</em> in GenAI model weights: floating-point exponents consistently exhibit low entropy across architectures and modalities. We trace this phenomenon to $\alpha$-stable distributions induced by SGD and prove a compression limit near FP4.67. Building on these insights, we propose <strong>ECF8</strong>, a lossless FP8 compression framework with entropy-aware encoding and GPU-optimized decoding. Experiments on LLMs and DiTs with up to 671B parameters demonstrate up to 26.9% memory savings and 177.1% throughput acceleration&mdash;all with perfectly lossless computation.</p>
+                            <p class="tldr-abstract mb-0">We present a theoretical and empirical study of <em>exponent concentration</em> in GenAI model weights: floating-point exponents consistently exhibit low entropy across architectures and modalities. We trace this phenomenon to $\alpha$-stable distributions induced by SGD and prove a compression limit near FP4.67. Building on these insights, we propose <strong>ECF8</strong>, a lossless FP8 compression framework with entropy-aware encoding and GPU-optimized decoding. Experiments on LLMs and DiTs with up to 671B parameters demonstrate up to 26.9% memory savings and 177.1% throughput acceleration, all with perfectly lossless computation.</p>
                         </div>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
                         </p>
 
                         <p class="body-text">
-                            We empirically examine weights across GenAI models spanning LLMs, diffusion transformers, and mixture-of-experts architectures. Across all models, exponents consistently cluster within a narrow range, exhibiting Shannon entropy of only 2&ndash;3 bits&mdash;far below the allocated bitwidth. This persistent low-entropy pattern strongly suggests an underlying distributional principle.
+                            We empirically examine weights across GenAI models spanning LLMs, diffusion transformers, and mixture-of-experts architectures. Across all models, exponents consistently cluster within a narrow range, exhibiting Shannon entropy of only 2&ndash;3 bits, far below the allocated bitwidth. This persistent low-entropy pattern strongly suggests an underlying distributional principle.
                         </p>
 
                         <div class="section-figure-row section-figure--wide section-figure--framed tight">
@@ -176,12 +176,12 @@
                             </div>
                         </div>
                         <p class="section-caption">
-                            <strong>Exponent entropy is consistently low across architectures and modalities.</strong> Layer-wise entropy for LLMs (DeepSeek-R1, Llama 3.3), MoE models (Qwen3-235B), diffusion transformers (FLUX.1), and video generation models (Wan2.1, Wan2.2) all cluster around 2&ndash;3 bits&mdash;far below the allocated bitwidth.
+                            <strong>Exponent entropy is consistently low across architectures and modalities.</strong> Layer-wise entropy for LLMs (DeepSeek-R1, Llama 3.3), MoE models (Qwen3-235B), diffusion transformers (FLUX.1), and video generation models (Wan2.1, Wan2.2) all cluster around 2&ndash;3 bits, far below the allocated bitwidth.
                         </p>
 
                         <div class="callout callout--gold">
                             <p>
-                                <strong>Key Observation:</strong> Floating-point exponents in trained GenAI model weights do not spread uniformly&mdash;they concentrate within a narrow range with only 2&ndash;3 bits of entropy, leaving significant headroom for lossless compression.
+                                <strong>Key Observation:</strong> Floating-point exponents in trained GenAI model weights do not spread uniformly; instead, they concentrate within a narrow range with only 2&ndash;3 bits of entropy, leaving significant headroom for lossless compression.
                             </p>
                         </div>
                     </div>
@@ -197,7 +197,7 @@
                         <h2 class="section-title">Why Exponents Concentrate</h2>
 
                         <p class="body-text">
-                            Exponent concentration is not coincidental&mdash;it arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(|\Delta_t| > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing a rigorous foundation for exponent concentration.
+                            Exponent concentration is not coincidental, but rather arises from the heavy-tailed dynamics of stochastic gradient descent. Under SGD, gradient noise exhibits power-law tails $\mathbb{P}(|\Delta_t| > x) \sim x^{-\alpha}$ with $\alpha < 2$. By the Generalized Central Limit Theorem, accumulated weight updates converge to $\alpha$-stable distributions, providing a rigorous foundation for exponent concentration.
                         </p>
 
                         <div class="math-block"><strong>Theorem (Exponent Entropy Concentration).</strong> Let $E = \lfloor \log_2 |X| \rfloor$ where $X \sim S_\alpha$. Then $E$ follows a two-sided geometric distribution with parameter $q = 2^{-\alpha}$, and the Shannon entropy is bounded by:
@@ -264,7 +264,7 @@
 
                         <div class="callout callout--teal">
                             <p>
-                                <strong>Design Principle:</strong> ECF8 transforms memory savings into inference speedup&mdash;a smaller memory footprint accommodates larger batch sizes, which in turn yields higher throughput and lower per-request latency.
+                                <strong>Design Principle:</strong> ECF8 transforms memory savings into inference speedup: a smaller memory footprint accommodates larger batch sizes, which in turn yields higher throughput and lower per-request latency.
                             </p>
                         </div>
                     </div>
@@ -280,7 +280,7 @@
                         <h2 class="section-title">Results</h2>
 
                         <p class="body-text">
-                            We evaluate ECF8 on nine models spanning LLMs, DiTs, and MoE architectures ranging from 8B to 671B parameters. ECF8 achieves 9.8%&ndash;26.9% memory savings and 11.3%&ndash;177.1% throughput acceleration&mdash;all while maintaining bit-exact weight reconstruction. Under fixed memory budgets, the freed memory accommodates larger batch sizes: for DeepSeek-R1-0528 at 640 GB, ECF8 supports batch size 16 versus FP8's batch size 2, delivering 150.3% higher throughput and 60.1% lower per-request latency.
+                            We evaluate ECF8 on nine models spanning LLMs, DiTs, and MoE architectures ranging from 8B to 671B parameters. ECF8 achieves 9.8%&ndash;26.9% memory savings and 11.3%&ndash;177.1% throughput acceleration, all while maintaining bit-exact weight reconstruction. Under fixed memory budgets, the freed memory accommodates larger batch sizes: for DeepSeek-R1-0528 at 640 GB, ECF8 supports batch size 16 versus FP8's batch size 2, delivering 150.3% higher throughput and 60.1% lower per-request latency.
                         </p>
 
                         <div class="results-table-wrapper">
@@ -618,7 +618,7 @@
                                 </div>
                             </div>
 
-                            <div class="ecf8-result-banner" id="ecf8-result"><strong>Pixel-identical outputs.</strong> ECF8 finished in 13s, <strong>45.9% faster</strong> than FP8 (24s)&mdash;with bit-for-bit identical results.</div>
+                            <div class="ecf8-result-banner" id="ecf8-result"><strong>Pixel-identical outputs.</strong> ECF8 finished in 13s, <strong>45.9% faster</strong> than FP8 (24s), with bit-for-bit identical results.</div>
                         </div>
                     </div>
                 </div>
@@ -633,7 +633,7 @@
                         <h2 class="section-title">Perfectly Lossless Compression</h2>
 
                         <p class="body-text">
-                            Unlike lossy quantization methods, ECF8 guarantees <strong>bit-exact</strong> weight reconstruction. The numerical difference between outputs from ECF8-compressed and original FP8 models is perfectly zero&mdash;not approximately zero, but <em>exactly</em> zero. Below are images generated by the ECF8-compressed Qwen-Image model, pixel-identical to the original FP8 model's outputs under the same random seed and inference parameters.
+                            Unlike lossy quantization methods, ECF8 guarantees <strong>bit-exact</strong> weight reconstruction. The numerical difference between outputs from ECF8-compressed and original FP8 models is perfectly zero, not approximately zero, but <em>exactly</em> zero. Below are images generated by the ECF8-compressed Qwen-Image model, pixel-identical to the original FP8 model's outputs under the same random seed and inference parameters.
                         </p>
 
                         <div class="image-grid">
@@ -702,7 +702,7 @@
 
                         <div class="callout callout--blue">
                             <p>
-                                <strong>Lossless Guarantee:</strong> ECF8 preserves full model fidelity&mdash;no accuracy degradation, no generative quality loss, and no artifacts. All outputs are bit-for-bit identical to those of the original FP8 model.
+                                <strong>Lossless Guarantee:</strong> ECF8 preserves full model fidelity, with no accuracy degradation, no generative quality loss, and no artifacts. All outputs are bit-for-bit identical to those of the original FP8 model.
                             </p>
                         </div>
                     </div>
@@ -711,7 +711,7 @@
 
             <!-- Invitation to the full paper -->
             <p class="paper-invite">
-                This page highlights our key findings. The full paper contains additional experiments, theoretical proofs, kernel-level benchmarks, and vLLM integration details&mdash;we invite interested readers to <a href="https://arxiv.org/abs/2510.02676">read the paper</a> for the complete picture.
+                This page highlights our key findings. The full paper contains additional experiments, theoretical proofs, kernel-level benchmarks, and vLLM integration details. We invite interested readers to <a href="https://arxiv.org/abs/2510.02676">read the paper</a> for the complete picture.
             </p>
 
             <!-- Citation Section -->
