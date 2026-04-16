@@ -326,6 +326,9 @@ a { color: var(--link-color); }
     background-color: rgba(37, 99, 235, 0.03);
     border: 1px solid rgba(37, 99, 235, 0.08);
     border-radius: 8px;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .tldr-headline {
