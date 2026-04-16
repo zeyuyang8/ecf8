@@ -71,23 +71,15 @@
             <div class="col-lg-11 mx-auto">
                 <h2 class="section-title section-title--flush">TL;DR</h2>
                 <div class="tldr-box rounded mb-3">
-                    <div class="row mb-3">
-                        <div class="col-lg-12">
-                            <p class="tldr-headline mb-0">
-                                GenAI model weights exhibit
-                                <span class="tldr-keyword" data-color="secondary">exponent concentration<span class="keyword-tooltip">Floating-point exponents in trained model weights cluster within a narrow range with only 2&ndash;3 bits of entropy, far below the 4&ndash;8 bits allocated by standard formats.</span></span>,
-                                enabling
-                                <span class="tldr-keyword" data-color="primary">lossless FP8 compression<span class="keyword-tooltip">ECF8 applies Huffman coding to low-entropy exponents with GPU-optimized decoding, achieving bit-exact weight reconstruction with zero quality degradation.</span></span>
-                                that delivers
-                                <span class="tldr-keyword" data-color="accent">real inference speedup<span class="keyword-tooltip">Up to 26.9% memory savings free GPU memory for larger batch sizes, yielding up to 177.1% throughput acceleration on models with up to 671B parameters.</span></span>.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <p class="tldr-abstract mb-0">We present a theoretical and empirical study of <em>exponent concentration</em> in GenAI model weights: floating-point exponents consistently exhibit low entropy across architectures and modalities. We trace this phenomenon to $\alpha$-stable distributions induced by SGD and prove a compression limit near FP4.67. Building on these insights, we propose <strong>ECF8</strong>, a lossless FP8 compression framework with entropy-aware encoding and GPU-optimized decoding. Experiments on LLMs and DiTs with up to 671B parameters demonstrate up to 26.9% memory savings and 177.1% throughput acceleration, all with perfectly lossless computation.</p>
-                        </div>
-                    </div>
+                    <p class="tldr-headline mb-3">
+                        GenAI model weights exhibit
+                        <span class="tldr-keyword" data-color="secondary">exponent concentration<span class="keyword-tooltip">Floating-point exponents in trained model weights cluster within a narrow range with only 2&ndash;3 bits of entropy, far below the 4&ndash;8 bits allocated by standard formats.</span></span>,
+                        enabling
+                        <span class="tldr-keyword" data-color="primary">lossless FP8 compression<span class="keyword-tooltip">ECF8 applies Huffman coding to low-entropy exponents with GPU-optimized decoding, achieving bit-exact weight reconstruction with zero quality degradation.</span></span>
+                        that delivers
+                        <span class="tldr-keyword" data-color="accent">real inference speedup<span class="keyword-tooltip">Up to 26.9% memory savings free GPU memory for larger batch sizes, yielding up to 177.1% throughput acceleration on models with up to 671B parameters.</span></span>.
+                    </p>
+                    <p class="tldr-abstract mb-0">We present a theoretical and empirical study of <em>exponent concentration</em> in GenAI model weights: floating-point exponents consistently exhibit low entropy across architectures and modalities. We trace this phenomenon to $\alpha$-stable distributions induced by SGD and prove a compression limit near FP4.67. Building on these insights, we propose <strong>ECF8</strong>, a lossless FP8 compression framework with entropy-aware encoding and GPU-optimized decoding. Experiments on LLMs and DiTs with up to 671B parameters demonstrate up to 26.9% memory savings and 177.1% throughput acceleration, all with perfectly lossless computation.</p>
                 </div>
 
                 <!-- Key metrics -->
